@@ -1,0 +1,69 @@
+from aoc import Aoc
+import itertools
+import math
+import re
+
+#########################################
+#########################################
+
+# Day {DAY}
+# https://adventofcode.com/2021
+
+#########################################
+#########################################
+
+class Day{DAY}Solution(Aoc):
+
+	def Run(self):
+	    self.StartDay({DAY})
+	    self.ReadInput()
+	    self.PartA()
+	    self.PartB()
+
+	def TestDataA(self):
+		self.inputdata.clear()
+		self.inputdata.append("1721")
+		self.inputdata.append("979")
+		self.inputdata.append("366")
+		self.inputdata.append("299")
+		self.inputdata.append("675")
+		self.inputdata.append("1456")
+
+	def TestDataB(self):
+		self.inputdata.clear()
+		self.inputdata.append("1721")
+		self.inputdata.append("979")
+		self.inputdata.append("366")
+		self.inputdata.append("299")
+		self.inputdata.append("675")
+		self.inputdata.append("1456")
+
+	def PartA(self):
+		self.StartPartA()
+		self.TestDataA()
+
+		answer = None
+
+		# Add solution here
+
+		self.ShowAnswer(answer)
+
+	def PartB(self):
+		self.StartPartB()
+		self.TestDataB()
+
+		answer = None
+
+		# Add solution here
+
+		self.ShowAnswer(answer)
+
+#########################################
+#########################################
+
+if __name__ == "__main__":
+	solution = Day{DAY}Solution()
+	solution.Run()
+
+#########################################
+#########################################
