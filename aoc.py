@@ -62,13 +62,13 @@ class Aoc:
     def StartPartA(self):
         print("")
         print(f"{BrightWhite}Part {BrightCyan}A{Reset}")
-        self._start = time.time()
+        self._start = time.perf_counter()
         self._part = 1
 
     def StartPartB(self):
         print("")
         print(f"{BrightWhite}Part {BrightCyan}B{Reset}")
-        self._start = time.time()
+        self._start = time.perf_counter()
         self._part = 2
 
     def ShowAnswer(self, result):
@@ -77,9 +77,10 @@ class Aoc:
         else:
             self.AnswerB = result
 
-        self._end = time.time()
+        self._end = time.perf_counter()
         ellapsed = self._end - self._start
         print(f"Answer: {BrightGreen}{result}{Reset} | Took {BrightMagenta}{ellapsed:.5f}{Reset} seconds")
+        print("")
 
     def GetAnswerA(self):
         return self.AnswerA
@@ -101,4 +102,10 @@ if platform == "win32":
 ## Main
 
 if __name__ == "__main__":
-    pass
+    aoc = Aoc()
+    aoc.StartPartA()
+    time.sleep(1)
+    aoc.ShowAnswer(42)
+    aoc.StartPartB()
+    time.sleep(0.4)
+    aoc.ShowAnswer(80085)
