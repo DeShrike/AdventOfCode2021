@@ -30,7 +30,7 @@ MagentaBackground = u"\u001b[45m"
 CyanBackground =    u"\u001b[46m"
 WhiteBackground =   u"\u001b[47m"
 
-class Aoc:
+class Aoc():
 
     def __init__(self):
         self._day = 0

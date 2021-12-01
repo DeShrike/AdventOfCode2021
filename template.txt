@@ -3,67 +3,60 @@ import itertools
 import math
 import re
 
-#########################################
-#########################################
-
 # Day {DAY}
 # https://adventofcode.com/2021
 
-#########################################
-#########################################
-
 class Day{DAY}Solution(Aoc):
 
-	def Run(self):
-	    self.StartDay({DAY})
-	    self.ReadInput()
-	    self.PartA()
-	    self.PartB()
+    def Run(self):
+        self.StartDay({DAY})
+        self.ReadInput()
+        self.PartA()
+        self.PartB()
 
-	def TestDataA(self):
-		self.inputdata.clear()
-		self.inputdata.append("1721")
-		self.inputdata.append("979")
-		self.inputdata.append("366")
-		self.inputdata.append("299")
-		self.inputdata.append("675")
-		self.inputdata.append("1456")
+    def Test(self):
+        self.StartDay({DAY})
 
-	def TestDataB(self):
-		self.inputdata.clear()
-		self.inputdata.append("1721")
-		self.inputdata.append("979")
-		self.inputdata.append("366")
-		self.inputdata.append("299")
-		self.inputdata.append("675")
-		self.inputdata.append("1456")
+        goal = self.TestDataA()
+        self.PartA()
+        assert self.GetAnswerA() == goal
 
-	def PartA(self):
-		self.StartPartA()
-		self.TestDataA()
+        goal = self.TestDataB()
+        self.PartB()
+        assert self.GetAnswerB() == goal
 
-		answer = None
+    def TestDataA(self):
+        self.inputdata.clear()
+        self.inputdata.append("1")
+        return None
 
-		# Add solution here
+    def TestDataB(self):
+        self.inputdata.clear()
+        self.inputdata.append("1")
+        return None
 
-		self.ShowAnswer(answer)
+    def PartA(self):
+        self.StartPartA()
 
-	def PartB(self):
-		self.StartPartB()
-		self.TestDataB()
+        # Add solution here
 
-		answer = None
+        answer = None
 
-		# Add solution here
+        self.ShowAnswer(answer)
 
-		self.ShowAnswer(answer)
+    def PartB(self):
+        self.StartPartB()
 
-#########################################
-#########################################
+        # Add solution here
+
+        answer = None
+
+        self.ShowAnswer(answer)
+
 
 if __name__ == "__main__":
-	solution = Day{DAY}Solution()
-	solution.Run()
-
-#########################################
-#########################################
+    solution = Day{DAY}Solution()
+    if len(sys.argv) >= 2 and sys.argv[1] == "test":
+        solution.Test()
+    else:
+        solution.Run()
