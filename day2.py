@@ -42,14 +42,8 @@ class Day2Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 900
 
     def PartA(self):
         self.StartPartA()
@@ -70,9 +64,17 @@ class Day2Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
-
-        answer = None
+        pos, depth, aim = 0, 0, 0
+        for line in self.inputdata:
+        	command, count = line.split(" ")
+        	if command == "forward":
+        		pos += int(count)
+        		depth += int(count) * aim
+        	elif command == "down":
+        		aim += int(count)
+        	elif command == "up":
+        		aim -= int(count)
+        answer = pos * depth
 
         self.ShowAnswer(answer)
 
