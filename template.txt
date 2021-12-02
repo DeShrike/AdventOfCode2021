@@ -2,6 +2,7 @@ from aoc import Aoc
 import itertools
 import math
 import re
+import sys
 
 # Day {DAY}
 # https://adventofcode.com/2021
@@ -27,12 +28,24 @@ class Day{DAY}Solution(Aoc):
 
     def TestDataA(self):
         self.inputdata.clear()
-        self.inputdata.append("1")
+        testdata = \
+        """
+        1000
+        2000
+        3000
+        """
+        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
 
     def TestDataB(self):
         self.inputdata.clear()
-        self.inputdata.append("1")
+        testdata = \
+        """
+        1000
+        2000
+        3000
+        """
+        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
 
     def PartA(self):
