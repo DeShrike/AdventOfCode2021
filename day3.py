@@ -66,13 +66,41 @@ class Day3Solution(Aoc):
 
         self.ShowAnswer(answer)
 
+    def CountBits(self, data, bitpos: int):
+        count0 = len([num for num in data if num[bitpos] == "0"])
+        count1 = len([num for num in data if num[bitpos] == "1"])
+        return count0, count1
+
     def PartB(self):
         self.StartPartB()
 
-        lsr = 0
-        ogr = 0
+        numbers = self.inputdata[:]
+        while len(numbers) > 1:
+            for bitpos in range(len(numbers[0])):
+                count0, count1 = self.CountBits(numbers, bitpos)
+                if count1 >= count0:
+                    numbers = [num for num in numbers if num[bitpos] == "1"]
+                else:
+                    numbers = [num for num in numbers if num[bitpos] == "0"]
+                if len(numbers) == 1:
+                    break
 
-        answer = lsr * ogr
+        csr = int(numbers[0], 2)
+
+        numbers = self.inputdata[:]
+        while len(numbers) > 1:
+            for bitpos in range(len(numbers[0])):
+                count0, count1 = self.CountBits(numbers, bitpos)
+                if count1 < count0:
+                    numbers = [num for num in numbers if num[bitpos] == "1"]
+                else:
+                    numbers = [num for num in numbers if num[bitpos] == "0"]
+                if len(numbers) == 1:
+                    break
+
+        ogr = int(numbers[0], 2)
+
+        answer = csr * ogr
 
         self.ShowAnswer(answer)
 
