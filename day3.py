@@ -57,8 +57,7 @@ class Day3Solution(Aoc):
         gamma = ""
         epsilon = ""
         for ix in range(len(self.inputdata[0])):
-            count0 = len([x for x in self.inputdata if x[ix] == "0"])
-            count1 = len([x for x in self.inputdata if x[ix] == "1"])
+            count0, count1 = self.CountBits(self.inputdata, ix)
             gamma = gamma + ("1" if count1 > count0 else "0")
             epsilon = epsilon + ("0" if count1 > count0 else "1")
 
