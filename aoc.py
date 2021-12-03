@@ -94,6 +94,17 @@ class Aoc():
     def Flush(self):
         stdout.flush()
 
+    def Assert(self, answer, goal):
+        try:
+            assert answer == goal
+        except AssertionError as e:
+            print(f"{RedBackground}{BrightWhite}Test Failed{Reset} {BrightRed}{answer}{Reset} is not equal to {BrightGreen}{goal}{Reset}")
+            print("")
+        else:
+            pass
+        finally:
+            pass
+
 if platform == "win32":
     import msvcrt, ctypes
     kernel32 = ctypes.windll.kernel32
