@@ -4,21 +4,19 @@ import math
 import re
 import sys
 
-# Template Version 1.2
-
-# Day {DAY}
+# Day 3
 # https://adventofcode.com/2021
 
-class Day{DAY}Solution(Aoc):
+class Day3Solution(Aoc):
 
     def Run(self):
-        self.StartDay({DAY})
+        self.StartDay(3)
         self.ReadInput()
         self.PartA()
         self.PartB()
 
     def Test(self):
-        self.StartDay({DAY})
+        self.StartDay(3)
 
         goal = self.TestDataA()
         self.PartA()
@@ -32,45 +30,55 @@ class Day{DAY}Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-        1000
-        2000
-        3000
+        00100
+        11110
+        10110
+        10111
+        10101
+        01111
+        00111
+        11100
+        10000
+        11001
+        00010
+        01010
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        return 198
 
     def TestDataB(self):
         self.inputdata.clear()
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 230
 
     def PartA(self):
         self.StartPartA()
 
-        # Add solution here
+        gamma = ""
+        epsilon = ""
+        for ix in range(len(self.inputdata[0])):
+            count0 = len([x for x in self.inputdata if x[ix] == "0"])
+            count1 = len([x for x in self.inputdata if x[ix] == "1"])
+            gamma = gamma + ("1" if count1 > count0 else "0")
+            epsilon = epsilon + ("0" if count1 > count0 else "1")
 
-        answer = None
+        answer = int(gamma, 2) * int(epsilon, 2)
 
         self.ShowAnswer(answer)
 
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        lsr = 0
+        ogr = 0
 
-        answer = None
+        answer = lsr * ogr
 
         self.ShowAnswer(answer)
 
 
 if __name__ == "__main__":
-    solution = Day{DAY}Solution()
+    solution = Day3Solution()
     if len(sys.argv) >= 2 and sys.argv[1] == "test":
         solution.Test()
     else:
