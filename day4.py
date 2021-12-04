@@ -61,14 +61,14 @@ class Day4Solution(Aoc):
         return 1924
 
     def ParseInput(self):
-        numbers = list(map(int,[num for num in self.inputdata[0].split(",")]))
+        numbers = list(map(int, [num for num in self.inputdata[0].split(",")]))
         boards = []
         boardcount = (len(self.inputdata) - 1) // 6
         for bix in range(boardcount):
             lix = bix * 6 + 2
             board = []
             for line in self.inputdata[lix:lix + 5]:
-                board.append(list(map(int,[num for num in line.replace("  "," ").split(" ")])))
+                board.append(list(map(int, [num for num in line.replace("  "," ").split(" ")])))
             boards.append(board)
 
         return numbers, boards
@@ -89,11 +89,11 @@ class Day4Solution(Aoc):
     def CheckWinner(self, boards):
         winners = []
         for b in boards:
-            if any([all([ c >= 100 for c in l]) for l in b]):
+            if any([all([c >= 100 for c in l]) for l in b]):
                 winners.append(b)
             else:
-                tb = list(zip(*b))
-                if any([all([ c >= 100 for c in l]) for l in tb]):
+                b_t = list(zip(*b))
+                if any([all([c >= 100 for c in l]) for l in b_t]):
                     winners.append(b)
         return winners
 
