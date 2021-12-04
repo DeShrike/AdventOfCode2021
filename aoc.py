@@ -2,33 +2,34 @@ import time
 import os
 from sys import platform, stdout
 
-Reversed =      u"\u001b[7m"
-DimBackground = u"\u001b[5m"
-Reset =         u"\u001b[0m"
+class Ansi():
+    Reversed =      u"\u001b[7m"
+    DimBackground = u"\u001b[5m"
+    Reset =         u"\u001b[0m"
 
-ClearScreen =   u"\u001b[2J"
-ClearLine =     u"\u001b[2K"
+    ClearScreen =   u"\u001b[2J"
+    ClearLine =     u"\u001b[2K"
 
-HideCursor =    u"\u001b[?25l"
-ShowCursor =    u"\u001b[?25h"
+    HideCursor =    u"\u001b[?25l"
+    ShowCursor =    u"\u001b[?25h"
 
-BrightBlack =   u"\u001b[30;1m"
-BrightRed =     u"\u001b[31;1m"
-BrightGreen =   u"\u001b[32;1m"
-BrightYellow =  u"\u001b[33;1m"
-BrightBlue =    u"\u001b[34;1m"
-BrightMagenta = u"\u001b[35;1m"
-BrightCyan =    u"\u001b[36;1m"
-BrightWhite =   u"\u001b[37;1m"
+    BrightBlack =   u"\u001b[30;1m"
+    BrightRed =     u"\u001b[31;1m"
+    BrightGreen =   u"\u001b[32;1m"
+    BrightYellow =  u"\u001b[33;1m"
+    BrightBlue =    u"\u001b[34;1m"
+    BrightMagenta = u"\u001b[35;1m"
+    BrightCyan =    u"\u001b[36;1m"
+    BrightWhite =   u"\u001b[37;1m"
 
-BlackBackground =   u"\u001b[40m"
-RedBackground =     u"\u001b[41m"
-GreenBackground =   u"\u001b[42m"
-YellowBackground =  u"\u001b[43m"
-BlueBackground =    u"\u001b[44m"
-MagentaBackground = u"\u001b[45m"
-CyanBackground =    u"\u001b[46m"
-WhiteBackground =   u"\u001b[47m"
+    BlackBackground =   u"\u001b[40m"
+    RedBackground =     u"\u001b[41m"
+    GreenBackground =   u"\u001b[42m"
+    YellowBackground =  u"\u001b[43m"
+    BlueBackground =    u"\u001b[44m"
+    MagentaBackground = u"\u001b[45m"
+    CyanBackground =    u"\u001b[46m"
+    WhiteBackground =   u"\u001b[47m"
 
 class Aoc():
 
@@ -43,12 +44,12 @@ class Aoc():
 
     def StartDay(self, day: int) -> None:
         self._day = day
-        print(f"{DimBackground} {BrightWhite}Day {BrightYellow}{self._day} {Reset}")
+        print(f"{Ansi.DimBackground} {Ansi.BrightWhite}Day {Ansi.BrightYellow}{self._day} {Ansi.Reset}")
 
     def ReadInput(self):
         self.inputdata.clear()
         if os.path.isfile(self.input_filename()) == False:
-            print(f"{BrightRed}File {self.input_filename()} not found{Reset}")
+            print(f"{Ansi.BrightRed}File {self.input_filename()} not found{Ansi.Reset}")
             return
 
         file = open(self.input_filename(), "r")
@@ -61,13 +62,13 @@ class Aoc():
 
     def StartPartA(self):
         print("")
-        print(f"{BrightWhite}Part {BrightCyan}A{Reset}")
+        print(f"{Ansi.BrightWhite}Part {Ansi.BrightCyan}A{Ansi.Reset}")
         self._start = time.perf_counter()
         self._part = 1
 
     def StartPartB(self):
         print("")
-        print(f"{BrightWhite}Part {BrightCyan}B{Reset}")
+        print(f"{Ansi.BrightWhite}Part {Ansi.BrightCyan}B{Ansi.Reset}")
         self._start = time.perf_counter()
         self._part = 2
 
@@ -79,7 +80,7 @@ class Aoc():
 
         self._end = time.perf_counter()
         ellapsed = self._end - self._start
-        print(f"Answer: {BrightGreen}{result}{Reset} | Took {BrightMagenta}{ellapsed:.5f}{Reset} seconds")
+        print(f"Answer: {Ansi.BrightGreen}{result}{Ansi.Reset} | Took {Ansi.BrightMagenta}{ellapsed:.5f}{Ansi.Reset} seconds")
         print("")
 
     def GetAnswerA(self):
@@ -98,7 +99,7 @@ class Aoc():
         try:
             assert answer == goal
         except AssertionError as e:
-            print(f"{RedBackground}{BrightWhite}Test Failed{Reset} {BrightRed}{answer}{Reset} is not equal to {BrightGreen}{goal}{Reset}")
+            print(f"{Ansi.RedBackground}{Ansi.BrightWhite}Test Failed{Ansi.Reset} {Ansi.BrightRed}{answer}{Ansi.Reset} is not equal to {Ansi.BrightGreen}{goal}{Ansi.Reset}")
             print("")
         else:
             pass

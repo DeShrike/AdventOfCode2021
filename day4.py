@@ -57,14 +57,8 @@ class Day4Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 1924
 
     def ParseInput(self):
         numbers = list(map(int,[num for num in self.inputdata[0].split(",")]))
@@ -84,22 +78,24 @@ class Day4Solution(Aoc):
             for l in b:
                 for ix, num in enumerate(l):
                     if num == number:
-                        l[ix] *= -1
+                        l[ix] += 100
 
     def PrintBoard(self, board):
         for line in board:
             for num in line:
-                print(f"{Ansi.BrightYellow}{-num:2}{Ansi.Reset} " if num < 0 else f"{num:2} ", end="")
+                print(f"{Ansi.BrightYellow}{num - 100:2}{Ansi.Reset} " if num >= 100 else f"{num:2} ", end="")
             print("")
 
     def CheckWinner(self, boards):
+        winners = []
         for b in boards:
-            if any([all([ c < 0 for c in l]) for l in b]):
-                return b
-            tb = list(zip(*b))
-            if any([all([ c < 0 for c in l]) for l in tb]):
-                return b
-        return None
+            if any([all([ c >= 100 for c in l]) for l in b]):
+                winners.append(b)
+            else:
+                tb = list(zip(*b))
+                if any([all([ c >= 100 for c in l]) for l in tb]):
+                    winners.append(b)
+        return winners
 
     def PartA(self):
         self.StartPartA()
@@ -109,10 +105,10 @@ class Day4Solution(Aoc):
         numbers, boards = self.ParseInput()
         for draw in numbers:
             self.MarkDraw(draw, boards)
-            winner = self.CheckWinner(boards)
-            if winner is not None:
-                self.PrintBoard(winner)
-                answer = draw * sum([sum([c for c in l if c > 0]) for l in winner])
+            winners = self.CheckWinner(boards)
+            if len(winners) > 0:
+                self.PrintBoard(winners[0])
+                answer = draw * sum([sum([c for c in l if c < 100]) for l in winners[0]])
                 break
 
         self.ShowAnswer(answer)
@@ -120,9 +116,21 @@ class Day4Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
-
         answer = None
+
+        numbers, boards = self.ParseInput()
+        for draw in numbers:
+            self.MarkDraw(draw, boards)
+            winners = self.CheckWinner(boards)
+            for winner in winners:
+                if len(boards) == 1:
+                    self.PrintBoard(winner)
+                    answer = draw * sum([sum([c for c in l if c < 100]) for l in winner])
+                    break
+                else:
+                    boards.remove(winner)
+            if answer:
+                break
 
         self.ShowAnswer(answer)
 
