@@ -91,10 +91,10 @@ void free_input(char** lines, int line_count)
 	free(lines);
 }
 
-char** read_input(int day, int max_lines, int max_line_length, int* line_count)
+char** read_input(int day, char* path, int max_lines, int max_line_length, int* line_count)
 {
 	char filename[100];
-	sprintf(filename, "./input-day%d.txt", day);
+	sprintf(filename, "%sinput-day%d.txt", path, day);
 	FILE *file = fopen(filename, "r");
 	if (file == NULL)
 	{
@@ -125,4 +125,15 @@ char** read_input(int day, int max_lines, int max_line_length, int* line_count)
 	free(line);
 	fclose(file);
 	return lines;
+}
+
+int* convert_input_to_numbers(char **lines, int line_count)
+{
+	int* numbers = (int*)malloc(line_count * sizeof(int));
+	for (int ix = 0; ix < line_count; ix++)
+	{
+		numbers[ix] = atoi(lines[ix]);
+	}
+
+	return numbers;
 }
