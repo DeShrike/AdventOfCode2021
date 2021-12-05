@@ -3,8 +3,7 @@ import itertools
 import math
 import re
 import sys
-
-# Template Version 1.2
+from collections import defaultdict
 
 # Day 5
 # https://adventofcode.com/2021
@@ -70,35 +69,26 @@ class Day5Solution(Aoc):
             dy = -1 if line[1] > line[3] else 1
             for y in range(line[1], line[3] + dy, dy):
                 pos = (line[0], y)
-                if pos in coords:
-                    coords[pos] = coords[pos] + 1
-                else:
-                    coords[pos] = 1
+                coords[pos] += 1
         elif line[1] == line[3]:
             # Horizonal
             dx = -1 if line[0] > line[2] else 1
             for x in range(line[0], line[2] + dx, dx):
                 pos = (x, line[1])
-                if pos in coords:
-                    coords[pos] = coords[pos] + 1
-                else:
-                    coords[pos] = 1
+                coords[pos] += 1
         else:
             # Diagonal
             dx = -1 if line[0] > line[2] else 1
             dy = -1 if line[1] > line[3] else 1
             for x, y in zip(range(line[0], line[2] + dx, dx), range(line[1], line[3] + dy, dy)):
                 pos = (x, y)
-                if pos in coords:
-                    coords[pos] = coords[pos] + 1
-                else:
-                    coords[pos] = 1
+                coords[pos] += 1
 
     def PartA(self):
         self.StartPartA()
 
         lines = self.ParseInput()
-        coords = {}
+        coords = defaultdict(int)
         for line in lines:
             if line[0] == line[2] or line[1] == line[3]:
                 self.PlotLine(coords, line)
@@ -111,7 +101,7 @@ class Day5Solution(Aoc):
         self.StartPartB()
 
         lines = self.ParseInput()
-        coords = {}
+        coords = defaultdict(int)
         for line in lines:
             self.PlotLine(coords, line)
 
@@ -126,3 +116,5 @@ if __name__ == "__main__":
         solution.Test()
     else:
         solution.Run()
+
+# Template Version 1.2

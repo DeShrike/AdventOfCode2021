@@ -4,8 +4,6 @@ import math
 import re
 import sys
 
-# Template Version 1.2
-
 # Day {DAY}
 # https://adventofcode.com/2021
 
@@ -41,6 +39,7 @@ class Day{DAY}Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
+        # self.TestDataB()    # If test data is same as test data for part A
         testdata = \
         """
         1000
@@ -75,3 +74,6 @@ if __name__ == "__main__":
         solution.Test()
     else:
         solution.Run()
+
+# Template Version 1.3
+
