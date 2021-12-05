@@ -4,7 +4,8 @@ from sys import platform, stdout
 
 class Ansi():
     Reversed =      u"\u001b[7m"
-    DimBackground = u"\u001b[5m"
+    Underline =     u"\u001b[4m"
+    SlowBlink =     u"\u001b[5m"
     Reset =         u"\u001b[0m"
 
     ClearScreen =   u"\u001b[2J"
@@ -12,6 +13,15 @@ class Ansi():
 
     HideCursor =    u"\u001b[?25l"
     ShowCursor =    u"\u001b[?25h"
+
+    Black =         u"\u001b[30m"
+    Red =           u"\u001b[31m"
+    Green =         u"\u001b[32m"
+    Yellow =        u"\u001b[33m"
+    Blue =          u"\u001b[34m"
+    Magenta =       u"\u001b[35m"
+    Cyan =          u"\u001b[36m"
+    White =         u"\u001b[37m"
 
     BrightBlack =   u"\u001b[30;1m"
     BrightRed =     u"\u001b[31;1m"
@@ -44,7 +54,7 @@ class Aoc():
 
     def StartDay(self, day: int) -> None:
         self._day = day
-        print(f"{Ansi.DimBackground} {Ansi.BrightWhite}Day {Ansi.BrightYellow}{self._day} {Ansi.Reset}")
+        print(f"{Ansi.BlueBackground} {Ansi.White}Day {Ansi.BrightMagenta}{self._day} {Ansi.Reset}")
 
     def ReadInput(self):
         self.inputdata.clear()
@@ -62,13 +72,13 @@ class Aoc():
 
     def StartPartA(self):
         print("")
-        print(f"{Ansi.BrightWhite}Part {Ansi.BrightCyan}A{Ansi.Reset}")
+        print(f"{Ansi.Underline}{Ansi.BrightWhite}Part {Ansi.BrightCyan}A{Ansi.Reset}")
         self._start = time.perf_counter()
         self._part = 1
 
     def StartPartB(self):
         print("")
-        print(f"{Ansi.BrightWhite}Part {Ansi.BrightCyan}B{Ansi.Reset}")
+        print(f"{Ansi.Underline}{Ansi.BrightWhite}Part {Ansi.BrightCyan}B{Ansi.Reset}")
         self._start = time.perf_counter()
         self._part = 2
 
