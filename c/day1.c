@@ -70,3 +70,4 @@ void part_b()
 
 	show_answer(increase_count);
 }
+

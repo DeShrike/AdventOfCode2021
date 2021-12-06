@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include "aoc.h"
 
 clock_t start, end;
@@ -136,4 +137,23 @@ int* convert_input_to_numbers(char **lines, int line_count)
 	}
 
 	return numbers;
+}
+
+char *ltrim(char *s)
+{
+    while (isspace(*s)) s++;
+    return s;
+}
+
+char *rtrim(char *s)
+{
+    char* back = s + strlen(s);
+    while (isspace(*--back));
+    *(back+1) = '\0';
+    return s;
+}
+
+char *trim(char *s)
+{
+    return rtrim(ltrim(s));
 }

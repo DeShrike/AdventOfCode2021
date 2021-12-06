@@ -10,5 +10,8 @@ void show_answer(long long answer);
 long long get_answer_a();
 long long get_answer_b();
 int* convert_input_to_numbers(char **lines, int line_count);
+char *ltrim(char *s);
+char *rtrim(char *s);
+char *trim(char *s);
 
 #endif
