@@ -37,21 +37,21 @@ class Day6Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        self.TestDataA()    # If test data is same as test data for part A
+        self.TestDataA()
         return 26984457539
 
     def Breed(self, days:int) -> int:
         numbers = [int(x) for x in self.inputdata[0].split(",")]
-        intervals = [len([x for x in numbers if x == d]) for d in range(8 + 1)]
+        stages = [len([x for x in numbers if x == d]) for d in range(8 + 1)]
         for day in range(days):
-        	pregnant = intervals[0]
-        	for x in range(1, len(intervals)):
-        		intervals[x - 1] = intervals[x]
-        		intervals[x] = 0
-        	intervals[6] += pregnant
-        	intervals[8] += pregnant
+        	pregnant = stages[0]
+        	for x in range(1, len(stages)):
+        		stages[x - 1] = stages[x]
+        		stages[x] = 0
+        	stages[6] += pregnant
+        	stages[8] += pregnant
 
-        return sum(intervals)
+        return sum(stages)
 
     def PartA(self):
         self.StartPartA()
