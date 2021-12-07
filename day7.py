@@ -42,23 +42,21 @@ class Day7Solution(Aoc):
 
     def FindBestFuelCost(self, numbers, left:int, right:int, part:int) -> int:
         if part == 1:
-            cost_left = sum([ abs(left - x) for x in numbers ])
-            cost_right = sum([ abs(right - x) for x in numbers ])
+            calcer = lambda num: sum([ abs(num - x) for x in numbers ])
         else:
-            cost_left = sum([ sum(range(abs(left - x) + 1)) for x in numbers ])
-            cost_right = sum([ sum(range(abs(right - x) + 1)) for x in numbers ])
+            calcer = lambda num: sum([ sum(range(abs(num - x) + 1)) for x in numbers ])
+
+        cost_left = calcer(left)
+        cost_right = calcer(right)
 
         while cost_left != cost_right:
             # print(f"{left} -> {cost_left}")
             # print(f"{right} -> {cost_right}")
             nleft = left + 1
             nright = right - 1
-            if part == 1:
-                cost_nleft = sum([ abs(nleft - x) for x in numbers ])
-                cost_nright = sum([ abs(nright - x) for x in numbers ])
-            else:
-                cost_nleft = sum([ sum(range(abs(nleft - x) + 1)) for x in numbers ])
-                cost_nright = sum([ sum(range(abs(nright - x) + 1)) for x in numbers ])
+
+            cost_nleft = calcer(nleft)
+            cost_nright = calcer(nright)
 
             if cost_nleft < cost_left:
                 left = nleft
@@ -74,7 +72,11 @@ class Day7Solution(Aoc):
         self.StartPartA()
 
         numbers = [int(x) for x in self.inputdata[0].split(",")]
-        answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 1)
+        #answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 1)
+
+        a = list(sorted(numbers))
+        ix = a[len(numbers) // 2]
+        answer = sum([ abs(ix - x) for x in numbers ])
 
         # Attempt 1: 359696 = too high
         # Attempt 2: 359648 = Correct (Pos 346)
@@ -84,11 +86,11 @@ class Day7Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        print("This will take a few minutes ... :(")
-        numbers = [int(x) for x in self.inputdata[0].split(",")]
-        answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 2)
-
-        self.ShowAnswer(answer)
+        #print("This will take a few minutes ... :(")
+        #numbers = [int(x) for x in self.inputdata[0].split(",")]
+        #answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 2)
+        answer = None
+        #self.ShowAnswer(answer)
 
 
 if __name__ == "__main__":
