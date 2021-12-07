@@ -10,7 +10,7 @@ import sys
 class Day6Solution(Aoc):
 
     def Run(self):
-        self.StartDay(6)
+        self.StartDay(6, "Lanternfish")
         self.ReadInput()
         self.PartA()
         self.PartB()

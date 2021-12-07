@@ -52,9 +52,10 @@ class Aoc():
         self.AnswerA = None
         self.AnswerB = None
 
-    def StartDay(self, day: int) -> None:
+    def StartDay(self, day:int, title:str) -> None:
         self._day = day
-        print(f"{Ansi.BlueBackground} {Ansi.White}Day {Ansi.BrightMagenta}{self._day} {Ansi.Reset}")
+        self.title = title
+        print(f"{Ansi.BlueBackground} {Ansi.White}Day {Ansi.BrightMagenta}{self._day}{Ansi.White} - {Ansi.Red}{self.title} {Ansi.Reset}")
 
     def ReadInput(self):
         self.inputdata.clear()

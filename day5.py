@@ -11,7 +11,7 @@ from collections import defaultdict
 class Day5Solution(Aoc):
 
     def Run(self):
-        self.StartDay(5)
+        self.StartDay(5, "Hydrothermal Venture")
         self.ReadInput()
         self.PartA()
         self.PartB()

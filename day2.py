@@ -10,7 +10,7 @@ import sys
 class Day2Solution(Aoc):
 
     def Run(self):
-        self.StartDay(2)
+        self.StartDay(2, "Dive!")
         self.ReadInput()
         self.PartA()
         self.PartB()

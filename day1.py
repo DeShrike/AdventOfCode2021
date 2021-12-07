@@ -10,7 +10,7 @@ import sys
 class Day1Solution(Aoc):
 
     def Run(self):
-        self.StartDay(1)
+        self.StartDay(1, "Sonar Sweep")
         self.ReadInput()
         self.PartA()
         self.PartB()

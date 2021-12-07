@@ -10,7 +10,7 @@ import sys
 class Day3Solution(Aoc):
 
     def Run(self):
-        self.StartDay(3)
+        self.StartDay(3, "Binary Diagnostic")
         self.ReadInput()
         self.PartA()
         self.PartB()

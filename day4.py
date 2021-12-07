@@ -12,7 +12,7 @@ import sys
 class Day4Solution(Aoc):
 
     def Run(self):
-        self.StartDay(4)
+        self.StartDay(4, "Giant Squid")
         self.ReadInput()
         self.PartA()
         self.PartB()
