@@ -52,7 +52,7 @@ class Aoc():
         self.AnswerA = None
         self.AnswerB = None
 
-    def StartDay(self, day:int, title:str) -> None:
+    def StartDay(self, day:int, title:str = "AOC") -> None:
         self._day = day
         self.title = title
         print(f"{Ansi.BlueBackground} {Ansi.White}Day {Ansi.BrightMagenta}{self._day}{Ansi.White} - {Ansi.Red}{self.title} {Ansi.Reset}")
