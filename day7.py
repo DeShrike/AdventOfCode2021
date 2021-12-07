@@ -1,4 +1,5 @@
 from aoc import Aoc
+from collections import Counter, defaultdict
 import itertools
 import math
 import re
@@ -68,6 +69,32 @@ class Day7Solution(Aoc):
 
         return cost_left
 
+    def PartA_Krisje(self):
+        self.StartPartA()
+
+        numbers = [int(x) for x in self.inputdata[0].split(",")]
+
+        numbers.sort()
+        crabs = dict(Counter(numbers))
+        dist = defaultdict(int)
+        for crab in range(len(numbers) + 1):
+            dist[crab] = sum([abs(crab - c) * crabs[c] for c in crabs if c != crab])
+        answer = min(dist.values())
+        self.ShowAnswer(answer)
+
+    def PartB_Krisje(self):
+        self.StartPartB()
+
+        numbers = [int(x) for x in self.inputdata[0].split(",")]
+
+        numbers.sort()
+        crabs = dict(Counter(numbers))
+        dist = defaultdict(int)
+        for crab in range(len(numbers) + 1):
+            dist[crab] = sum([sum(range(abs(crab - c) + 1)) * crabs[c] for c in crabs if c != crab])
+        answer = min(dist.values())
+        self.ShowAnswer(answer)
+
     def PartA(self):
         self.StartPartA()
 
@@ -86,11 +113,10 @@ class Day7Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        #print("This will take a few minutes ... :(")
-        #numbers = [int(x) for x in self.inputdata[0].split(",")]
-        #answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 2)
-        answer = None
-        #self.ShowAnswer(answer)
+        print("This will take a few minutes ... :(")
+        numbers = [int(x) for x in self.inputdata[0].split(",")]
+        answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 2)
+        self.ShowAnswer(answer)
 
 
 if __name__ == "__main__":
