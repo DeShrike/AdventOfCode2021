@@ -30,40 +30,62 @@ class Day8Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-		be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
-		edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
-		fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
-		fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
-		aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga | gecf egdcabf bgf bfgea
-		fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf | gebdcfa ecba ca fadegcb
-		dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbcadfe
-		bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
-		egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
-		gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
+        be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
+        edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
+        fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
+        fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
+        aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga | gecf egdcabf bgf bfgea
+        fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf | gebdcfa ecba ca fadegcb
+        dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbcadfe
+        bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
+        egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
+        gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 26
 
     def TestDataB(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 61229
 
     def ParseInput(self):
-    	data = []
-    	for line in self.inputdata:
-    		parts = line.split("|")
-    		inputs = parts[0].strip().split(" ")
-    		outputs = parts[1].strip().split(" ")
-    		data.append((inputs, outputs))
-    	return data
+        data = []
+        for line in self.inputdata:
+            parts = line.split("|")
+            inputs = parts[0].strip().split(" ")
+            outputs = parts[1].strip().split(" ")
+            data.append((inputs, outputs))
+        return data
+
+    def MissingLetter(self, s:str) -> str:
+        for o in range(7):
+            if chr(o + 97) not in s:
+                return chr(o + 97)
+        return None
+
+    def Decode(self, codes):
+        inputs = ["".join(sorted(c)) for c in codes[0]]
+        outputs = ["".join(sorted(c)) for c in codes[1]]
+
+        decoded = [None for _ in range(10)]
+        decoded[1] = [s for s in inputs if len(s) == 2][0]
+        decoded[4] = [s for s in inputs if len(s) == 4][0]
+        decoded[7] = [s for s in inputs if len(s) == 3][0]
+        decoded[8] = [s for s in inputs if len(s) == 7][0]
+        decoded[3] = [s for s in inputs if len(s) == 5 and (decoded[1][0] in s and decoded[1][1] in s)][0]
+        decoded[6] = [s for s in inputs if len(s) == 6 and (decoded[1][0] not in s or decoded[1][1] not in s)][0]
+        decoded[5] = [s for s in inputs if len(s) == 5 and (self.MissingLetter(decoded[6]) not in s) and (decoded[1][0] not in s or decoded[1][1] not in s)][0]
+        decoded[2] = [s for s in inputs if len(s) == 5 and s not in decoded][0]
+        decoded[0] = [s for s in inputs if len(s) == 6 and (self.MissingLetter(s) in decoded[4]) and s not in decoded][0]
+        decoded[9] = [s for s in inputs if len(s) == 6 and s not in decoded][0]
+
+        d4 = decoded.index(outputs[0])
+        d3 = decoded.index(outputs[1])
+        d2 = decoded.index(outputs[2])
+        d1 = decoded.index(outputs[3])
+        number = d1 + (d2 * 10) + (d3 * 100) + (d4 * 1000)
+        return number
 
     def PartA(self):
         self.StartPartA()
@@ -76,9 +98,11 @@ class Day8Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        data = self.ParseInput()
+        answer = sum([self.Decode(codes) for codes in data])
 
-        answer = None
+        # Attempt 1: 1014246 is too low
+        # Attempt 2: 1019355 = Correct
 
         self.ShowAnswer(answer)
 
