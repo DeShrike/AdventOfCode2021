@@ -109,6 +109,8 @@ class Aoc():
     def Assert(self, answer, goal):
         try:
             assert answer == goal
+            print(f"{Ansi.GreenBackground}{Ansi.Black}OK{Ansi.Reset}")
+            print("")
         except AssertionError as e:
             print(f"{Ansi.RedBackground}{Ansi.BrightWhite}Test Failed{Ansi.Reset} {Ansi.BrightRed}{answer}{Ansi.Reset} is not equal to {Ansi.BrightGreen}{goal}{Ansi.Reset}")
             print("")
