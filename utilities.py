@@ -11,6 +11,12 @@ def lcm(a: int, b: int) -> int:
 def terminal_size():
     return struct.unpack('HHHH', fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))[:2]
 
+def sumrange(c:int) -> int:
+    """
+    Calculate 1 + 2 + 3 + 4 + ... + c
+    """
+    return c * (c + 1) / 2
+
 def dirange(start, end=None, step:int=1):
     """
     Directional, inclusive range. This range function is an inclusive version of
