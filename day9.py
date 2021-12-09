@@ -7,6 +7,47 @@ import sys
 # Day 9
 # https://adventofcode.com/2021
 
+class FloodFill():
+
+    directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+
+    def __init__(self, m):
+        self.field = m
+        self.points = []
+        self.height = len(self.field)
+        self.width = len(self.field[0])
+
+    def Run(self, startx, starty):
+        self.startx = startx
+        self.starty = starty
+
+        self.points = []
+        q = []
+        q.append((startx, starty))
+
+        while True:
+            newposses = []
+            increased = False
+            for qq in q:
+                curx = qq[0]
+                cury = qq[1]
+
+                for d in self.directions:
+                    nx = curx + d[0]
+                    ny = cury + d[1]
+                    if nx < 0 or ny < 0 or nx >= self.width or ny >= self.height:
+                        continue
+                    if self.field[ny][nx] != "9" and (nx, ny) not in self.points:
+                        self.points.append((nx, ny))
+                        increased = True
+                        q.append((nx, ny))
+
+            if not increased:
+                break
+
+        return len(self.points)
+
+
 class Day9Solution(Aoc):
 
     def Run(self):
@@ -41,15 +82,8 @@ class Day9Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 1134
 
     def GetNeighbours(self, x:int, y:int):
         n = []
@@ -63,9 +97,7 @@ class Day9Solution(Aoc):
             n.append(int(self.inputdata[y][x + 1]))
         return n
 
-    def PartA(self):
-        self.StartPartA()
-
+    def FindLowPointsA(self):
         width = len(self.inputdata[0])
         height = len(self.inputdata)
         lowpoints = []
@@ -75,16 +107,35 @@ class Day9Solution(Aoc):
                 n = self.GetNeighbours(x, y)
                 if all([num > current for num in n]):
                     lowpoints.append(current)
-        answer = sum([lp + 1 for lp in lowpoints])
-        print(lowpoints)
+        return lowpoints
+
+    def FindLowPointsB(self):
+        width = len(self.inputdata[0])
+        height = len(self.inputdata)
+        lowpoints = []
+        for x in range(width):
+            for y in range(height):
+                current = int(self.inputdata[y][x])
+                n = self.GetNeighbours(x, y)
+                if all([num > current for num in n]):
+                    lowpoints.append((x, y))
+        return lowpoints
+
+    def PartA(self):
+        self.StartPartA()
+
+        answer = sum([lp + 1 for lp in self.FindLowPointsA()])
+
         self.ShowAnswer(answer)
 
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        ff = FloodFill(self.inputdata)
+        lowpoints = self.FindLowPointsB()
+        sizes = list(sorted([ff.Run(*lp) for lp in lowpoints], reverse=True))
 
-        answer = None
+        answer = sizes[0] * sizes[1] * sizes[2]
 
         self.ShowAnswer(answer)
 
