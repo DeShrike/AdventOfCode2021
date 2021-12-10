@@ -1,8 +1,5 @@
 from aoc import Aoc
 from collections import Counter
-import itertools
-import math
-import re
 import sys
 
 # Day 10
@@ -66,6 +63,35 @@ class Day10Solution(Aoc):
 
         return None
 
+    def DoAutoComplete(self, line:str) -> str:
+        o = []
+        begins = "([{<"
+        ends = ")]}>"
+        for ix, char in enumerate(line):
+            if char in begins:
+                o.append(begins.index(char))
+            elif char in ends:
+                last = o.pop()
+
+        completion = ""
+        while len(o) > 0:
+            completion += ends[o.pop()]
+        return completion
+
+    def CalculateCompletionScore(self, completion:str) -> int:
+        scores = {
+            ")": 1,
+            "]": 2,
+            "}": 3,
+            ">": 4
+        }
+
+        score = 0
+        for char in completion:
+            score = (score * 5) + scores[char]
+
+        return score
+
     def PartA(self):
         self.StartPartA()
 
@@ -84,9 +110,10 @@ class Day10Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
-
-        answer = None
+        completions = [self.DoAutoComplete(line) for line in self.inputdata if self.FindError(line) is None]
+        scores = [self.CalculateCompletionScore(completion) for completion in completions]
+        sortedscores = list(sorted(scores))
+        answer = sortedscores[len(sortedscores) // 2]
 
         self.ShowAnswer(answer)
 
