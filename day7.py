@@ -1,8 +1,5 @@
 from aoc import Aoc
 from collections import Counter, defaultdict
-import itertools
-import math
-import re
 import sys
 
 # Day 7
@@ -45,7 +42,8 @@ class Day7Solution(Aoc):
         if part == 1:
             calcer = lambda num: sum([ abs(num - x) for x in numbers ])
         else:
-            calcer = lambda num: sum([ sum(range(abs(num - x) + 1)) for x in numbers ])
+            tn = lambda num: ((num + 1) * num) // 2
+            calcer = lambda num: sum([ tn(abs(num - x)) for x in numbers ])
 
         cost_left = calcer(left)
         cost_right = calcer(right)
@@ -99,7 +97,6 @@ class Day7Solution(Aoc):
         self.StartPartA()
 
         numbers = [int(x) for x in self.inputdata[0].split(",")]
-        #answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 1)
 
         a = list(sorted(numbers))
         ix = a[len(numbers) // 2]
@@ -113,7 +110,7 @@ class Day7Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        print("This will take a few minutes ... :(")
+        print("This will take a few seconds ...")
         numbers = [int(x) for x in self.inputdata[0].split(",")]
         answer = self.FindBestFuelCost(numbers, min(numbers), max(numbers), 2)
         self.ShowAnswer(answer)
