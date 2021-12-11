@@ -103,6 +103,9 @@ class Aoc():
     def MoveCursor(self, column: int, line: int) -> str:
         return u"\u001b[%d;%dH" % (line, column)
 
+    def MoveCursorUp(self, lines: int) -> str:
+        return u"\u001b[%dA" % lines
+
     def Flush(self):
         stdout.flush()
 
