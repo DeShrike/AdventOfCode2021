@@ -97,7 +97,6 @@ class Day11Solution(Aoc):
                     grid[y][x] = 0
 
         self.ShowGrid(step, grid)
-        # a = input()
         return flashes
 
     def PartA(self):
