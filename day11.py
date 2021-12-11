@@ -1,7 +1,5 @@
 from aoc import Aoc, Ansi
-import itertools
-import math
-import re
+import time
 import sys
 
 # Day 11
@@ -50,8 +48,12 @@ class Day11Solution(Aoc):
         return 195
 
     def ShowGrid(self, step, grid):
-        if step > 1:
-            print(f"{self.MoveCursorUp(13)}", end="")
+        if step == 1:
+            print(f"{Ansi.HideCursor}{Ansi.StoreCursor}", end="")
+        elif step == 2:
+            print(f"{Ansi.HideCursor}{self.MoveCursorUp(12)}{Ansi.StoreCursor}", end="")
+        else:
+            print(f"{Ansi.HideCursor}{Ansi.RestoreCursor}", end="")
         print(f"Step {Ansi.BrightGreen}{step}{Ansi.Reset}")
         for y in range(10):
             for x in range(10):
@@ -60,7 +62,8 @@ class Day11Solution(Aoc):
                 else:
                     print(grid[y][x], end="")
             print("")
-        print("")
+        print(f"{Ansi.ShowCursor}")
+        time.sleep(0.1)
 
     def GetNeighbours(self, x:int, y:int):
         directions = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
@@ -93,7 +96,7 @@ class Day11Solution(Aoc):
                     flashes += 1
                     grid[y][x] = 0
 
-        # self.ShowGrid(step, grid)
+        self.ShowGrid(step, grid)
         # a = input()
         return flashes
 

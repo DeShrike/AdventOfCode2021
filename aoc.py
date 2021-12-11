@@ -11,6 +11,9 @@ class Ansi():
     ClearScreen =   u"\u001b[2J"
     ClearLine =     u"\u001b[2K"
 
+    StoreCursor =   u"\u001b[s"
+    RestoreCursor = u"\u001b[u"
+
     HideCursor =    u"\u001b[?25l"
     ShowCursor =    u"\u001b[?25h"
 
