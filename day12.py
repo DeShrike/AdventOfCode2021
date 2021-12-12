@@ -1,4 +1,5 @@
 from aoc import Aoc
+from collections import Counter
 import itertools
 import math
 import re
@@ -30,7 +31,15 @@ class Day12Solution(Aoc):
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
 
-        goal = self.TestDataB()
+        goal = self.TestDataB1()
+        self.PartB()
+        self.Assert(self.GetAnswerB(), goal)
+
+        goal = self.TestDataB2()
+        self.PartB()
+        self.Assert(self.GetAnswerB(), goal)
+
+        goal = self.TestDataB3()
         self.PartB()
         self.Assert(self.GetAnswerB(), goal)
 
@@ -93,17 +102,20 @@ class Day12Solution(Aoc):
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 226
 
-    def TestDataB(self):
+    def TestDataB1(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA1()
+        return 36
+
+    def TestDataB2(self):
+        self.inputdata.clear()
+        self.TestDataA2()
+        return 103
+
+    def TestDataB3(self):
+        self.inputdata.clear()
+        self.TestDataA3()
+        return 3509
 
     def ParseData(self):
         v = {}
@@ -119,19 +131,44 @@ class Day12Solution(Aoc):
                 v[n2] = [n1]
         return v
 
-    def MakePaths(self, nodes, start:str) -> None:
+    def CanEnter1(self, name:str) -> bool:
+        if ord(name[0]) < 97:
+            return True
+        if name not in self.newpath:
+            return True
+        return False
+
+    def CanEnter2(self, name:str) -> bool:
+        if ord(name[0]) < 97:
+            return True
+        if name not in self.newpath:
+            return True
+
+        if (name == "end" or name == "start") and name in self.newpath:
+            return False
+
+        if not any([x for x in list(Counter(self.newpath).items()) if ord(x[0][0]) >= 97 and x[1] > 1]):
+            return True
+        return False
+
+    def MakePaths(self, nodes, start:str, part:int) -> None:
         node = nodes[start]
         self.newpath.append(start)
-        # print(start, self.newpath)
-        # a = input()
         if start == "end":
             self.allpaths.append(self.newpath[:])
             self.newpath.pop()
             return
         for nextnode in node:
-            if ord(nextnode[0]) < 97 or nextnode not in self.newpath:
-                self.MakePaths(nodes, nextnode)
+            if (part == 1 and self.CanEnter1(nextnode)) or (part == 2 and self.CanEnter2(nextnode)):
+                self.MakePaths(nodes, nextnode, part)
         self.newpath.pop()
+
+    def ShowStats(self):
+        lengths = list(sorted([len(p) for p in self.allpaths]))
+        print(f"Paths: {len(lengths)}")
+        print(f"Shortest: {lengths[0]} steps")
+        print(f"Longest: {lengths[-1]} steps")
+        print(f"Average: {sum(lengths) / len(lengths):.2f} steps")
 
     def PartA(self):
         self.StartPartA()
@@ -139,20 +176,23 @@ class Day12Solution(Aoc):
         self.allpaths = []
         self.newpath = []
         nodes = self.ParseData()
-        # print(nodes)
-        # print(len(nodes))
-        self.MakePaths(nodes, "start")
+        self.MakePaths(nodes, "start", 1)
         answer = len(self.allpaths)
 
+        self.ShowStats()
         self.ShowAnswer(answer)
 
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        self.allpaths = []
+        self.newpath = []
+        nodes = self.ParseData()
 
-        answer = None
+        self.MakePaths(nodes, "start", 2)
+        answer = len(self.allpaths)
 
+        self.ShowStats()
         self.ShowAnswer(answer)
 
 
