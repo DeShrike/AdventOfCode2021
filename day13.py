@@ -110,7 +110,7 @@ class Day13Solution(Aoc):
         height = max([x[1] for x in dots])
         for y in range(height + 1):
             for x in range(width + 1):
-                if (x,y) in dots:
+                if (x, y) in dots:
                     print("#", end="")
                 else:
                     print(" ", end="")
