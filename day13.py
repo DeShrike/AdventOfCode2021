@@ -57,7 +57,7 @@ class Day13Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        self.TestDataA()    # If test data is same as test data for part A
+        self.TestDataA()
         return None
 
     def ParseInput(self):
@@ -108,12 +108,11 @@ class Day13Solution(Aoc):
     def ShowDots(self, dots):
         width = max([x[0] for x in dots])
         height = max([x[1] for x in dots])
-        for y in range(height + 1):
-            for x in range(width + 1):
-                if (x,y) in dots:
-                    print("#", end="")
-                else:
-                    print(" ", end="")
+        for x, y in itertools.product(range(width + 1), range(height + 1)):
+            if (x, y) in dots:
+                print("#", end="")
+            else:
+                print(" ", end="")
             print("")
 
     def PartA(self):
@@ -121,8 +120,6 @@ class Day13Solution(Aoc):
 
         dots, folds = self.ParseInput()
 
-        width = max([x[0] for x in dots])
-        height = max([x[1] for x in dots])
         dots = self.Fold(folds[0], dots)
         answer = len(dots)
         self.ShowAnswer(answer)
@@ -134,9 +131,6 @@ class Day13Solution(Aoc):
 
         for fold in folds:
             dots = self.Fold(fold, dots)
-            # width = max([x[0] for x in dots])
-            # height = max([x[1] for x in dots])
-            # print(width, height)
 
         self.ShowDots(dots)
         answer = "CEJKLUGJ"
