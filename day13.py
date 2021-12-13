@@ -57,14 +57,7 @@ class Day13Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
+        self.TestDataA()    # If test data is same as test data for part A
         return None
 
     def ParseInput(self):
@@ -101,12 +94,6 @@ class Day13Solution(Aoc):
             if dot not in newdots:
                 newdots.append(dot)
         return newdots
-        #10 -> 4
-        #f = 7
-        # 10 - (10 - 7) * 2
-
-        # 14 -> 0
-        # 14 - (14 - 7) * 2
 
     def Fold(self, fold, dots):
         if fold[1] is None:
@@ -118,29 +105,41 @@ class Day13Solution(Aoc):
             dots = self.FoldHorizontal(fold[1], dots)
             return dots
 
+    def ShowDots(self, dots):
+        width = max([x[0] for x in dots])
+        height = max([x[1] for x in dots])
+        for y in range(height + 1):
+            for x in range(width + 1):
+                if (x,y) in dots:
+                    print("#", end="")
+                else:
+                    print(" ", end="")
+            print("")
+
     def PartA(self):
         self.StartPartA()
 
         dots, folds = self.ParseInput()
-        # print(dots)
-        # print(folds)
 
         width = max([x[0] for x in dots])
         height = max([x[1] for x in dots])
-        print(width, height)
-        print(len(dots))
         dots = self.Fold(folds[0], dots)
         answer = len(dots)
-
         self.ShowAnswer(answer)
 
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        dots, folds = self.ParseInput()
 
-        answer = None
+        for fold in folds:
+            dots = self.Fold(fold, dots)
+            # width = max([x[0] for x in dots])
+            # height = max([x[1] for x in dots])
+            # print(width, height)
 
+        self.ShowDots(dots)
+        answer = "CEJKLUGJ"
         self.ShowAnswer(answer)
 
 
