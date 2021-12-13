@@ -108,11 +108,12 @@ class Day13Solution(Aoc):
     def ShowDots(self, dots):
         width = max([x[0] for x in dots])
         height = max([x[1] for x in dots])
-        for x, y in itertools.product(range(width + 1), range(height + 1)):
-            if (x, y) in dots:
-                print("#", end="")
-            else:
-                print(" ", end="")
+        for y in range(height + 1):
+            for x in range(width + 1):
+                if (x,y) in dots:
+                    print("#", end="")
+                else:
+                    print(" ", end="")
             print("")
 
     def PartA(self):
