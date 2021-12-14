@@ -1,8 +1,5 @@
 from aoc import Aoc
 from collections import Counter
-import itertools
-import math
-import re
 import sys
 
 # Day 14
@@ -11,7 +8,7 @@ import sys
 class Day14Solution(Aoc):
 
     def Run(self):
-        self.StartDay(14, "AOC")
+        self.StartDay(14, "Extended Polymerization")
         self.ReadInput()
         self.PartA()
         self.PartB()
@@ -119,6 +116,9 @@ class Day14Solution(Aoc):
                 count = data[0]
                 islast = data[1]
                 self.SplitPair(key, count, rules[key], islast, newpairs)
+            else:
+                print(f"No rule for {key}")
+
         return newpairs
 
     def PartB(self):
@@ -144,6 +144,7 @@ class Day14Solution(Aoc):
                     counts[r] += count
                 else:
                     counts[r] = count
+
         sortedcounts = sorted(counts.values())
         answer = sortedcounts[-1] - sortedcounts[0] + 1
 
