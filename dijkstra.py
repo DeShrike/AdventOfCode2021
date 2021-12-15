@@ -1,0 +1,73 @@
+import itertools
+
+def GetNeighbours(x:int, y:int, width:int, height:int):
+    # directions = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    for d in directions:
+        nx = x + d[0]
+        ny = y + d[1]
+        if nx < 0 or ny < 0 or nx >= width or ny >= height:
+            continue
+        yield nx, ny
+
+def BuildGraph(data):
+
+    width = len(data[0])
+    height = len(data)
+    graph = {}
+    costs = {}
+    for x, y in itertools.product(range(width), range(height)):
+        costs[(x, y)] = 1e9
+        neighbours = {}
+        for nx, ny in GetNeighbours(x, y, width, height):
+            neighbours[(nx, ny)] = int(data[ny][nx])
+        graph[(x, y)] = neighbours
+
+    costs[(0, 0)] = 0
+    parents = {}
+    return graph, costs, parents
+
+def Dijkstra(source, target, graph, costs, parents):
+
+    nextNode = source
+
+    while nextNode != target:
+
+        for neighbor in graph[nextNode]:
+
+            if graph[nextNode][neighbor] + costs[nextNode] < costs[neighbor]:
+                costs[neighbor] = graph[nextNode][neighbor] + costs[nextNode]
+                parents[neighbor] = nextNode
+
+            del graph[neighbor][nextNode]
+
+        del costs[nextNode]
+
+        nextNode = min(costs, key=costs.get)
+
+    return parents
+
+def BackPedal(source, target, searchResult):
+
+    node = target
+    backpath = [target]
+    path = []
+
+    while node != source:
+        backpath.append(searchResult[node])
+        node = searchResult[node]
+
+    for i in range(len(backpath)):
+        path.append(backpath[-i - 1])
+
+    return path
+
+def DoDijkstra(data):
+
+    width = len(data[0])
+    height = len(data)
+
+    graph, costs, parents = BuildGraph(data)
+    result = Dijkstra((0, 0), (width - 1, height - 1), graph, costs, parents)
+    path = BackPedal((0, 0), (width - 1, height - 1), result)
+    return path
