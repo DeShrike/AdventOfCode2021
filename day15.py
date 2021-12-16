@@ -74,35 +74,6 @@ class Day15Solution(Aoc):
 
         self.ShowAnswer(answer)
 
-    """
-    def PartAstar(self):
-        self.StartPartA()
-
-        height = len(self.inputdata)
-        width = len(self.inputdata[0])
-        maze = []
-        for y in range(0, height):
-            mline = []
-            row = self.inputdata[y]
-            for pos in row:
-                mline.append(int(pos) )
-            maze.append(mline)
-
-        astar = AStar(maze)
-        path = astar.run([0, 0], [width - 1, height - 1])
-        # print(path)
-        self.PrintGrid(path)
-        cost = 0
-        for p in path[1:]:
-            cost += maze[p[1]][p[0]]
-        answer = cost
-
-        # Attempt 1: 624 is too high
-        # Attempt 2: 620 is too high
-
-        self.ShowAnswer(answer)
-    """
-
     def Wrap(self, c, steps):
         num = int(c)
         for _ in range(steps):

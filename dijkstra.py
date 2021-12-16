@@ -8,6 +8,13 @@ def GetNeighbours(x:int, y:int, width:int, height:int):
         ny = y + d[1]
         if nx < 0 or ny < 0 or nx >= width or ny >= height:
             continue
+
+        if nx > width / 3 * 2 and ny < height / 3:
+            continue
+
+        if ny > height / 3 * 2 and nx < width / 3:
+            continue
+
         yield nx, ny
 
 def BuildGraph(data):
@@ -17,11 +24,18 @@ def BuildGraph(data):
     graph = {}
     costs = {}
     for x, y in itertools.product(range(width), range(height)):
+
+        if x > width / 3 * 2 and y < height / 3:
+            continue
+        if y > height / 3 * 2 and x < width / 3:
+            continue
+
         costs[(x, y)] = 1e9
         neighbours = {}
         for nx, ny in GetNeighbours(x, y, width, height):
             neighbours[(nx, ny)] = int(data[ny][nx])
-        graph[(x, y)] = neighbours
+        if len(neighbours) > 0:
+            graph[(x, y)] = neighbours
 
     costs[(0, 0)] = 0
     parents = {}
