@@ -59,12 +59,10 @@ class Day16Solution(Aoc):
         # self.TestDataA()    # If test data is same as test data for part A
         testdata = \
         """
-        1000
-        2000
-        3000
+        CE00C43D881120
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        return 9
 
     def HexToBinary(self, data:str) -> str:
         bindata = "".join([self.hextobin[c] for c in data])
@@ -75,9 +73,8 @@ class Day16Solution(Aoc):
             self.type = 0
             self.version = 0
             self.literal = None
-            self.operator = None
             self.children = []
-            self.parent = None
+            self.evaluated_value = None
 
         def __repr__(self):
             return f"Packet: (V:{self.version} T:{self.type}) "
@@ -87,7 +84,7 @@ class Day16Solution(Aoc):
 
         @classmethod
         def Decode(cls, bits:str, ix:int, count:int = -1) -> int:
-            print(f"Length: {len(bits)} - Start At {ix}  - SubCOunt: {count}")
+            # print(f"Length: {len(bits)} - Start At {ix}  - SubCOunt: {count}")
             packets = []
             while (ix < len(bits) - 1 and count == -1) or (len(packets) < count):
                 p = cls()
@@ -96,9 +93,9 @@ class Day16Solution(Aoc):
                 ix += 3
                 p.type = int(bits[ix:ix + 3], 2)
                 ix += 3
-                print(f"Version {p.version} - Type: {p.type}")
+                # print(f"Version {p.version} - Type: {p.type}")
                 if p.version == 0 and p.type == 0 and len(bits) - ix < 10:
-                    print(f"remaining: {bits[ix-6:]}")
+                    # print(f"remaining: {bits[ix-6:]}")
                     break
                 if p.type == 4: # literal
                     value = ""
@@ -109,42 +106,74 @@ class Day16Solution(Aoc):
                         if group[0] == "0":
                             break
                     p.literal = int(value, 2)
-                    print(f"  Literal: {p.literal} - Ix: {ix}")
+                    # print(f"  Literal: {p.literal} - Ix: {ix}")
                 else:
                     lti = bits[ix]
                     ix += 1
                     if lti == "0": # 15
                         l = int(bits[ix:ix + 15], 2)
-                        print(f"  Sublength: {l}")
+                        # print(f"  Sublength: {l}")
                         ix += 15
                         # aa = input()
                         subpackets, _ = cls.Decode(bits[ix:ix + l], 0, -1)
                         p.children += subpackets
-                        print(f" Now {len(p.children)} children")
+                        # print(f" Now {len(p.children)} children")
                         ix += l
                     else:           # 11
                         c = int(bits[ix:ix + 11], 2)
-                        print(f"  SubCount: {c}")
+                        # print(f"  SubCount: {c}")
                         ix += 11
                         # aa = input()
                         subpackets, ix = cls.Decode(bits, ix, c)
                         p.children += subpackets
-                        print(f" Now {len(p.children)} children")
+                        # print(f" Now {len(p.children)} children")
 
-                print(f"  ** Ix: {ix}   Packets: {len(packets)}   - Need {count}")
+                # print(f"  ** Ix: {ix}   Packets: {len(packets)}   - Need {count}")
 
-            print(f"Return with {len(packets)} packets -  {ix}")
-            # a = input()
+            # print(f"Return with {len(packets)} packets -  {ix}")
+
             return packets, ix
 
         def VersionTotal(self) -> int:
             return sum([c.VersionTotal() for c in self.children]) + self.version
 
+        def Evaluate(self) -> int:
+            for c in self.children:
+                c.Evaluate()
+            if self.type == 0:  # Sum
+                self.evaluated_value = sum([c.evaluated_value for c in self.children])
+                return self.evaluated_value
+            elif self.type == 1:  # Product
+                self.evaluated_value = 1
+                for c in self.children:
+                    self.evaluated_value *= c.evaluated_value
+                return self.evaluated_value
+            elif self.type == 2:  # Minimum
+                self.evaluated_value = min([c.evaluated_value for c in self.children])
+                return self.evaluated_value
+            elif self.type == 3:  # Maximum
+                self.evaluated_value = max([c.evaluated_value for c in self.children])
+                return self.evaluated_value
+            elif self.type == 4:  # Literal
+                self.evaluated_value = self.literal
+                return self.evaluated_value
+            elif self.type == 5:  # Greater Than
+                self.evaluated_value = 1 if self.children[0].evaluated_value > self.children[1].evaluated_value else 0
+                return self.evaluated_value
+            elif self.type == 6:  # Less Than
+                self.evaluated_value = 1 if self.children[0].evaluated_value < self.children[1].evaluated_value else 0
+                return self.evaluated_value
+            elif self.type == 7:  # Equal To
+                self.evaluated_value = 1 if self.children[0].evaluated_value == self.children[1].evaluated_value else 0
+                return self.evaluated_value
+            else:
+                print(f"Unknown packet type: {self.type}")
+                a = input()
+
     def PartA(self):
         self.StartPartA()
 
         bits = self.HexToBinary(self.inputdata[0])
-        print(bits)
         roots, _ = self.Packet.Decode(bits, 0, -1)
 
         answer = roots[0].VersionTotal()
@@ -154,9 +183,13 @@ class Day16Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        bits = self.HexToBinary(self.inputdata[0])
+        roots, _ = self.Packet.Decode(bits, 0, -1)
+        print("Evaluating")
+        answer = roots[0].Evaluate()
 
-        answer = None
+        # Attempt 1: 539661406307 is too low
+        # Attempt 2: 744953223228 is correct
 
         self.ShowAnswer(answer)
 
