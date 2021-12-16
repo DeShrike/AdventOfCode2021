@@ -97,6 +97,9 @@ class Day16Solution(Aoc):
                 p.type = int(bits[ix:ix + 3], 2)
                 ix += 3
                 print(f"Version {p.version} - Type: {p.type}")
+                if p.version == 0 and p.type == 0 and len(bits) - ix < 10:
+                    print(f"remaining: {bits[ix-6:]}")
+                    break
                 if p.type == 4: # literal
                     value = ""
                     while True:
@@ -114,18 +117,24 @@ class Day16Solution(Aoc):
                         l = int(bits[ix:ix + 15], 2)
                         print(f"  Sublength: {l}")
                         ix += 15
+                        # aa = input()
                         subpackets, _ = cls.Decode(bits[ix:ix + l], 0, -1)
                         p.children += subpackets
+                        print(f" Now {len(p.children)} children")
                         ix += l
                     else:           # 11
                         c = int(bits[ix:ix + 11], 2)
                         print(f"  SubCount: {c}")
                         ix += 11
+                        # aa = input()
                         subpackets, ix = cls.Decode(bits, ix, c)
                         p.children += subpackets
+                        print(f" Now {len(p.children)} children")
+
+                print(f"  ** Ix: {ix}   Packets: {len(packets)}   - Need {count}")
 
             print(f"Return with {len(packets)} packets -  {ix}")
-            a = input()
+            # a = input()
             return packets, ix
 
         def VersionTotal(self) -> int:
@@ -136,10 +145,9 @@ class Day16Solution(Aoc):
 
         bits = self.HexToBinary(self.inputdata[0])
         print(bits)
-        roots,  = self.Packet.Decode(bits, 0, -1)
-        root.Decode(bits, 0)
+        roots, _ = self.Packet.Decode(bits, 0, -1)
 
-        answer = root.VersionTotal()
+        answer = roots[0].VersionTotal()
 
         self.ShowAnswer(answer)
 
