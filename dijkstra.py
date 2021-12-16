@@ -81,7 +81,10 @@ def DoDijkstra(data):
     width = len(data[0])
     height = len(data)
 
+    print("Building Graph")
     graph, costs, parents = BuildGraph(data)
+
+    print("Searching")
     result = Dijkstra((0, 0), (width - 1, height - 1), graph, costs, parents)
     path = BackPedal((0, 0), (width - 1, height - 1), result)
     return path

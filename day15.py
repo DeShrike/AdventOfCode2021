@@ -1,4 +1,5 @@
 from aoc import Aoc, Ansi
+from canvas import Canvas
 from dijkstra import DoDijkstra
 import itertools
 import math
@@ -49,6 +50,26 @@ class Day15Solution(Aoc):
         self.TestDataA()
         return 315
 
+    def CreatePNG(self, path, part:str, cellsize:int = 1):
+        print("Creating PNG")
+        width = len(self.inputdata[0])
+        height = len(self.inputdata)
+        canvas = Canvas(width * cellsize, height * cellsize)
+
+        for x, y in itertools.product(range(width), range(height)):
+            value = int(self.inputdata[y][x])
+            c = (255 - (255 // value), 255 - (255 // value), 255 - (255 // value))
+            if (x, y) in path:
+                c = (255 - (255 // value), 0, 0)
+            self.SetPixel(canvas, cellsize, x, y, c)
+
+        canvas.save_PNG(f"day{self._day}{part}.png")
+
+    def SetPixel(self, canvas, cellsize:int, x:int, y:int, color):
+        for xx in range(x * cellsize, (x + 1) * cellsize + 1):
+            for yy in range(y * cellsize, (y + 1) * cellsize + 1):
+                canvas.set_pixel(xx, yy, color)
+
     def PrintGrid(self, path):
         for y, line in enumerate(self.inputdata):
             for x, col in enumerate(line):
@@ -73,6 +94,8 @@ class Day15Solution(Aoc):
         # Attempt 3: 498 is correct
 
         self.ShowAnswer(answer)
+
+        self.CreatePNG(path, "A", 4)
 
     def Wrap(self, c, steps):
         num = int(c)
@@ -107,6 +130,7 @@ class Day15Solution(Aoc):
         answer = cost
 
         self.ShowAnswer(answer)
+        self.CreatePNG(path, "B", 2)
 
 
 if __name__ == "__main__":
