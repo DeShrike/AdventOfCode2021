@@ -37,15 +37,8 @@ class Day17Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        self.TestDataA()
+        return 112
 
     def ParseInput(self):
         rx1 = re.compile(f"target area: x=(?P<x1>[\-0-9]*)..(?P<x2>[\-0-9]*), y=(?P<y1>[\-0-9]*)..(?P<y2>[\-0-9]*)")
@@ -61,7 +54,7 @@ class Day17Solution(Aoc):
     def Shoot(self, vx:int, vy:int) -> int:
         x, y = 0, 0
         maxy = 0
-        while y > self.ty2:
+        while y >= self.ty1 and x <= self.tx2:
             x += vx
             y += vy
             vx = max(0, vx - 1)
@@ -69,13 +62,14 @@ class Day17Solution(Aoc):
             maxy = max(maxy, y)
             if self.tx1 <= x <= self.tx2 and self.ty1 <= y <= self.ty2:
                 return maxy
+
         return None
 
     def PartA(self):
         self.StartPartA()
 
         self.tx1, self.ty1, self.tx2, self.ty2 = self.ParseInput()
-        print(f"T: {self.tx1},{self.ty1} - {self.tx2}, {self.ty2}")
+        print(f"T: {self.tx1},{self.ty1} - {self.tx2},{self.ty2}")
         maxy = 0
         for vx, vy in itertools.product(range(100), range(100)):
             highy = self.Shoot(vx, vy)
@@ -94,9 +88,20 @@ class Day17Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        self.tx1, self.ty1, self.tx2, self.ty2 = self.ParseInput()
+        print(f"T: {self.tx1},{self.ty1} - {self.tx2},{self.ty2}")
+        count = 0
+        for vx, vy in itertools.product(range(500), range(-500, 500)):
+            highy = self.Shoot(vx, vy)
+            if highy is not None:
+                count += 1
+                print(f"\rCount: {count}", end="")
+        print("\r")
+        answer = count
 
-        answer = None
+        # Attempt 1: 193 is too low
+        # Attempt 2: 937 is too low
+        # Attempt 3: 996 is correct
 
         self.ShowAnswer(answer)
 
