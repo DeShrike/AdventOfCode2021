@@ -226,11 +226,13 @@ class Day18Solution(Aoc):
             n = self
             while not n.IsSimpleValue():
                 n = n.r
+                print(n)
+            print(f"Add {value} to {n.value}")
             n.value += value
 
         def Explode(self, level:int = 0) -> bool:
             if level == 4 and self.IsSimplePair():
-                print(f" need explode: {self}")
+                print(f"Need explode: {self}")
                 if self.l.value is None or self.r.value is None:
                     print(f"Bad Explode: {self}")
                     quit()
