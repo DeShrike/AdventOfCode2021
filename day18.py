@@ -187,8 +187,12 @@ class Day18Solution(Aoc):
                     return "Root:" + str(self.value)
                 return f"ROOT[{self.l},{self.r}]"
             if self.value is not None:
-                return self.kant + str(self.value)
-            return f"{self.kant}[{self.l},{self.r}]"
+                return str(self.value)
+            return f"[{self.l},{self.r}]"
+
+            # if self.value is not None:
+            #     return self.kant + str(self.value)
+            # return f"{self.kant}[{self.l},{self.r}]"
 
         def Magnitude(self):
             if self.value is not None:
@@ -209,45 +213,20 @@ class Day18Solution(Aoc):
             return self.value is not None
 
         def PassToRight(self, value:int):
-            print(f"Pass To Right: {value} in {self}")
-
-            if self.IsSimpleValue():
-                print(f"Adding")
-                self.value += value
-                return True
-
-            if self.parent is None:
-                print("NP")
-                return False
-
-            return self.parent.PassToRight(value)
-
-        def PassToRight_X(self, value:int):
-            print(f"Pass To Right: {value} in {self}")
-            print(f"  Right is {self.r}")
-            if self.r.IsSimpleValue():
-                print(f"Adding R")
-                self.r.value += value
-                return True
-
-            if self.parent is None:
-                print("NP")
-                return False
-
-            return self.parent.PassToRight(value)
+            print(f"PassToRight {self}")
+            n = self
+            while not n.IsSimpleValue():
+                n = n.l
+                print(n)
+            print(f"Add {value} to {n.value}")
+            n.value += value
 
         def PassToLeft(self, value:int):
-            print(f"Pass To Left: {value} in {self}")
-            if self.l.IsSimpleValue():
-                print(f"Adding L")
-                self.l.value += value
-                return True
-
-            if self.parent is None:
-                print("NP")
-                return False
-
-            return self.parent.PassToLeft(value)
+            print(f"PassToLeft {self}")
+            n = self
+            while not n.IsSimpleValue():
+                n = n.r
+            n.value += value
 
         def Explode(self, level:int = 0) -> bool:
             if level == 4 and self.IsSimplePair():
@@ -260,15 +239,17 @@ class Day18Solution(Aoc):
 
                 # left
                 if self.kant == "R":
-                    self.l.PassToLeft(self.l.value)
+                    self.parent.l.PassToLeft(self.l.value)
                 else:
                     pass
+                    # self.parent.r.PassToRight(self.l.value) # ???
 
                 # right
                 if self.kant == "L":
-                    self.r.PassToRight(self.r.value)
+                    self.parent.r.PassToRight(self.r.value)
                 else:
                     pass
+                    # self.parent.l.PassToLeft(self.r.value) # ???
 
                 self.l = None
                 self.r = None
