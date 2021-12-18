@@ -18,6 +18,11 @@ class Day18Solution(Aoc):
     def Test(self):
         self.StartDay(18)
 
+        goal = self.TestDataA0()
+        self.PartA()
+        self.Assert(self.GetAnswerA(), goal)
+
+        """
         goal = self.TestDataA1()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
@@ -37,18 +42,28 @@ class Day18Solution(Aoc):
         goal = self.TestDataA5()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
-
+        """
         """
         goal = self.TestDataB()
         self.PartB()
         self.Assert(self.GetAnswerB(), goal)
-		"""
+        """
+
+    def TestDataA0(self):
+        self.inputdata.clear()
+        testdata = \
+        """
+        [[[[4,3],4],4],[7,[[8,4],9]]]
+        [1,1]
+        """
+        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
+        return None
 
     def TestDataA1(self):
         self.inputdata.clear()
         testdata = \
         """
-		[[[[1,1],[2,2]],[3,3]],[4,4]]
+        [[[[1,1],[2,2]],[3,3]],[4,4]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 445
@@ -57,7 +72,7 @@ class Day18Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-		[[1,2],[[3,4],5]]
+        [[1,2],[[3,4],5]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 143
@@ -66,7 +81,7 @@ class Day18Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-		[[[[5,0],[7,4]],[5,5]],[6,6]]
+        [[[[5,0],[7,4]],[5,5]],[6,6]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 1137
@@ -75,7 +90,7 @@ class Day18Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-		[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+        [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 3488
@@ -84,16 +99,16 @@ class Day18Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-		[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
-		[[[5,[2,8]],4],[5,[[9,9],0]]]
-		[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
-		[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
-		[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
-		[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
-		[[[[5,4],[7,7]],8],[[8,3],8]]
-		[[9,3],[[9,9],[6,[4,9]]]]
-		[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
-		[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]
+        [[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
+        [[[5,[2,8]],4],[5,[[9,9],0]]]
+        [6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
+        [[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
+        [[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
+        [[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
+        [[[[5,4],[7,7]],8],[[8,3],8]]
+        [[9,3],[[9,9],[6,[4,9]]]]
+        [[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
+        [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return 4140
@@ -112,68 +127,158 @@ class Day18Solution(Aoc):
 
     class Snailfish():
 
-    	def __init__(self):
-    		self.l = None
-    		self.r = None
-    		self.value = None
+        def __init__(self):
+            self.l = None
+            self.r = None
+            self.value = None
+            self.parent = None
 
-    	@staticmethod
-    	def FindCenter(line:str) -> int:
-    		o = 0
-    		for ix, c in enumerate(line):
-    			if c == "[":
-    				o += 1
-    			elif c == "]":
-    				o -= 1
-    			elif c == ",":
-    				if o == 0:
-    					return ix
-    		return None
+        @staticmethod
+        def FindCenter(line:str) -> int:
+            o = 0
+            for ix, c in enumerate(line):
+                if c == "[":
+                    o += 1
+                elif c == "]":
+                    o -= 1
+                elif c == ",":
+                    if o == 0:
+                        return ix
+            return None
 
-    	@classmethod
-    	def Parse(cls, line:str):
-    		sf = cls()
-    		if len(line) == 1:
-    			sf.value = int(line)
-    		else:
-    			line = line[1:-1]
-    			c = cls.FindCenter(line)
-    			sf.l = cls.Parse(line[0:c])
-    			sf.r = cls.Parse(line[c + 1:])
-    		return sf
+        @classmethod
+        def Parse(cls, line:str, parent):
+            sf = cls()
+            sf.parent = parent
+            if len(line) <= 2:
+                sf.value = int(line)
+            else:
+                line = line[1:-1]
+                c = cls.FindCenter(line)
+                sf.l = cls.Parse(line[0:c], sf)
+                sf.r = cls.Parse(line[c + 1:], sf)
+            return sf
 
-    	@classmethod
-    	def Create(cls, l, r):
-    		sf = cls()
-    		sf.l = l
-    		sf.r = r
-    		return sf
+        @classmethod
+        def Create(cls, l, r, parent):
+            sf = cls()
+            sf.parent = parent
+            sf.l = l
+            sf.r = r
+            l.parent = sf
+            r.parent = sf
+            return sf
 
-    	def __str__(self):
-    		if self.value is not None:
-    			return str(self.value)
-    		return f"[{self.l},{self.r}]"
+        @classmethod
+        def CreateSimple(cls, value:int, parent):
+            sf = cls()
+            sf.value = value
+            sf.parent = parent
+            return sf
 
-    	def Magnitude(self):
-    		if self.value is not None:
-    			return self.value
-    		return 3 * self.l.Magnitude() + 2 * self.r.Magnitude()
+        def __str__(self):
+            if self.parent is None:
+                if self.value is not None:
+                    return "Root:" + str(self.value)
+                return f"ROOT[{self.l},{self.r}]"
+            if self.value is not None:
+                return str(self.value)
+            return f"[{self.l},{self.r}]"
 
-    	def Add(self, rightnumber):
-    		return self.Create(self, rightnumber)
+        def Magnitude(self):
+            if self.value is not None:
+                return self.value
+            return 3 * self.l.Magnitude() + 2 * self.r.Magnitude()
 
-    	def Explode(self) -> bool:
-    		return False
+        def Add(self, rightnumber):
+            som = self.Create(self, rightnumber, self.parent)
+            print(f"         Sum: {som}")
+            som.Reduce()
+            print(f"After Reduce: {som}")
+            return som
 
-    	def Split(self) -> bool:
-    		return False
+        def IsSimplePair(self) -> bool:
+            return self.value is None and self.l.value is not None and self.r.value is not None
 
-    	def Reduce(self) -> bool:
-    		return False
+        def IsSimpleValue(self) -> bool:
+            return self.value is not None
+
+        def PassToRight(self, value:int):
+            print(f"Pass To Right: {value}")
+            if self.r.IsSimpleValue():
+                print(f"Adding R")
+                self.r.value += value
+                return True
+
+            if self.parent is None:
+                print("NP")
+                return False
+
+            return self.parent.PassToRight(value)
+
+        def PassToLeft(self, value:int):
+            print(f"Pass To Left: {value}")
+            if self.l.IsSimpleValue():
+                print(f"Adding L")
+                self.l.value += value
+                return True
+
+            if self.parent is None:
+                print("NP")
+                return False
+
+            return self.parent.PassToLeft(value)
+
+        def Explode(self, level:int = 0) -> bool:
+            if level == 4 and self.IsSimplePair():
+                print(f" need explode: {self}")
+                if self.l.value is None or self.r.value is None:
+                    print(f"Bad Explode: {self}")
+                    quit()
+                a = input()
+
+                self.parent.PassToLeft(self.l.value)
+                self.parent.PassToRight(self.r.value)
+                self.l = None
+                self.r = None
+                self.value = 0
+                return True
+            if self.l is not None and self.l.Explode(level + 1):
+                return True
+            if self.r is not None and self.r.Explode(level + 1):
+                return True
+            return False
+
+        def Split(self) -> bool:
+            if self.value is not None:
+                if self.value >= 10:
+                    l = self.value // 2
+                    r = self.value - l
+                    self.l = self.CreateSimple(l, self)
+                    self.r = self.CreateSimple(r, self)
+                    self.value = None
+                    return True
+            else:
+                if self.l.Split():
+                    return True
+                if self.r.Split():
+                    return True
+            return False
+
+        def Reduce(self) -> None:
+            changed = True
+            while changed:
+                changed = False
+                while self.Explode():
+                    print(f"After Explode: {self}")
+                    changed = changed or True
+                while self.Split():
+                    print(f"After Split: {self}")
+                    changed = changed or True
 
     def ParseInput(self):
-    	numbers = [self.Snailfish.Parse(line) for line in self.inputdata]
-    	return numbers
+        numbers = [self.Snailfish.Parse(line, None) for line in self.inputdata]
+        return numbers
 
     def PartA(self):
         self.StartPartA()
@@ -181,15 +286,9 @@ class Day18Solution(Aoc):
         numbers = self.ParseInput()
         som = numbers[0]
         for num in numbers[1:]:
-        	som = som.Add(num)
-        	while True:
-	        	exploded = som.Explode()
-	        	split = som.Split()
-	        	reduced = som.Reduce()
-	        	if exploded + split + reduced == 0:
-	        		break
+            som = som.Add(num)
 
-        print(f"Final Sum: {som}")
+        print(f"   Final Sum: {som}")
         answer = som.Magnitude()
 
         self.ShowAnswer(answer)
