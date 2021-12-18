@@ -132,6 +132,7 @@ class Day18Solution(Aoc):
             self.r = None
             self.value = None
             self.parent = None
+            self.kant = ""
 
         @staticmethod
         def FindCenter(line:str) -> int:
@@ -156,7 +157,9 @@ class Day18Solution(Aoc):
                 line = line[1:-1]
                 c = cls.FindCenter(line)
                 sf.l = cls.Parse(line[0:c], sf)
+                sf.l.kant = "L"
                 sf.r = cls.Parse(line[c + 1:], sf)
+                sf.r.kant = "R"
             return sf
 
         @classmethod
@@ -165,6 +168,8 @@ class Day18Solution(Aoc):
             sf.parent = parent
             sf.l = l
             sf.r = r
+            l.kant = "L"
+            r.kant = "R"
             l.parent = sf
             r.parent = sf
             return sf
@@ -182,8 +187,8 @@ class Day18Solution(Aoc):
                     return "Root:" + str(self.value)
                 return f"ROOT[{self.l},{self.r}]"
             if self.value is not None:
-                return str(self.value)
-            return f"[{self.l},{self.r}]"
+                return self.kant + str(self.value)
+            return f"{self.kant}[{self.l},{self.r}]"
 
         def Magnitude(self):
             if self.value is not None:
@@ -204,7 +209,22 @@ class Day18Solution(Aoc):
             return self.value is not None
 
         def PassToRight(self, value:int):
-            print(f"Pass To Right: {value}")
+            print(f"Pass To Right: {value} in {self}")
+
+            if self.IsSimpleValue():
+                print(f"Adding")
+                self.value += value
+                return True
+
+            if self.parent is None:
+                print("NP")
+                return False
+
+            return self.parent.PassToRight(value)
+
+        def PassToRight_X(self, value:int):
+            print(f"Pass To Right: {value} in {self}")
+            print(f"  Right is {self.r}")
             if self.r.IsSimpleValue():
                 print(f"Adding R")
                 self.r.value += value
@@ -217,7 +237,7 @@ class Day18Solution(Aoc):
             return self.parent.PassToRight(value)
 
         def PassToLeft(self, value:int):
-            print(f"Pass To Left: {value}")
+            print(f"Pass To Left: {value} in {self}")
             if self.l.IsSimpleValue():
                 print(f"Adding L")
                 self.l.value += value
@@ -235,10 +255,21 @@ class Day18Solution(Aoc):
                 if self.l.value is None or self.r.value is None:
                     print(f"Bad Explode: {self}")
                     quit()
+
                 a = input()
 
-                self.parent.PassToLeft(self.l.value)
-                self.parent.PassToRight(self.r.value)
+                # left
+                if self.kant == "R":
+                    self.l.PassToLeft(self.l.value)
+                else:
+                    pass
+
+                # right
+                if self.kant == "L":
+                    self.r.PassToRight(self.r.value)
+                else:
+                    pass
+
                 self.l = None
                 self.r = None
                 self.value = 0
@@ -255,7 +286,9 @@ class Day18Solution(Aoc):
                     l = self.value // 2
                     r = self.value - l
                     self.l = self.CreateSimple(l, self)
+                    self.l.kant = "L"
                     self.r = self.CreateSimple(r, self)
+                    self.r.kant = "R"
                     self.value = None
                     return True
             else:
