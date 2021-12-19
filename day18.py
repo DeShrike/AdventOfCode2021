@@ -18,11 +18,11 @@ class Day18Solution(Aoc):
     def Test(self):
         self.StartDay(18)
 
+        """
         goal = self.TestDataA0()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
 
-        """
         goal = self.TestDataA1()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
@@ -38,10 +38,10 @@ class Day18Solution(Aoc):
         goal = self.TestDataA4()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
+        """
         goal = self.TestDataA5()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
-        """
         """
         goal = self.TestDataB()
         self.PartB()
@@ -190,18 +190,10 @@ class Day18Solution(Aoc):
             return sf
 
         def __str__(self):
-            if self.parent is None:
-                if self.value is not None:
-                    return str(self.value)
-                return f"[{self.l},{self.r}]"
             if self.value is not None:
                 # return "{" + str(self.index) + "}" + str(self.value)
                 return str(self.value)
             return f"[{self.l},{self.r}]"
-
-            # if self.value is not None:
-            #     return self.kant + str(self.value)
-            # return f"{self.kant}[{self.l},{self.r}]"
 
         def CalcIndexes(self, pos:int = 0):
             if self.IsSimpleValue():
@@ -220,9 +212,9 @@ class Day18Solution(Aoc):
 
         def Add(self, rightnumber):
             som = self.Create(self, rightnumber, self.parent)
-            print(f"         Sum: {som}")
+            # print(f"         Sum: {som}")
             som.Reduce()
-            print(f"After Reduce: {som}")
+            # print(f"After Reduce: {som}")
             return som
 
         def IsSimplePair(self) -> bool:
@@ -234,6 +226,7 @@ class Day18Solution(Aoc):
         def TryAddToValueWithIndex(self, index:int, value:int):
             if self.IsSimpleValue() and self.index == index:
                 self.value += value
+                # print("Found")
                 return True
             if self.IsSimpleValue():
                 return False
@@ -244,22 +237,11 @@ class Day18Solution(Aoc):
             return False
 
         def AddToValueWithIndex(self, index:int, value:int):
-            print(f"Add {value} to num with index {index}")
+            # print(f"Add {value} to num with index {index}")
             current = self
             while current.parent is not None:
                 current = current.parent
             current.TryAddToValueWithIndex(index, value)
-
-        """
-        def PassToLeft(self, value:int):
-            print(f"PassToLeft {self}")
-            n = self
-            while not n.IsSimpleValue():
-                n = n.r
-                print(n)
-            print(f"Add {value} to {n.value}")
-            n.value += value
-        """
 
         def Explode(self, level:int = 0) -> bool:
             if level == 0:
@@ -271,7 +253,7 @@ class Day18Solution(Aoc):
 
                 self.AddToValueWithIndex(self.l.index - 1, self.l.value)
                 self.AddToValueWithIndex(self.r.index + 1, self.r.value)
-
+                # a = input()
                 self.l = None
                 self.r = None
                 self.value = 0
@@ -281,53 +263,6 @@ class Day18Solution(Aoc):
             if self.r is not None and self.r.Explode(level + 1):
                 return True
             return False
-        """
-        def ExplodeX(self, level:int = 0) -> bool:
-            if level == 4 and self.IsSimplePair():
-                print("*************************")
-                print(f"Need explode: {self}")
-                if self.l.value is None or self.r.value is None:
-                    print(f"Bad Explode: {self}")
-                    quit()
-
-                a = input()
-
-                # left
-                print("**** LEFT")
-                if self.kant == "R":
-                    print("  A")
-                    self.parent.l.PassToLeft(self.l.value)
-                else:
-                    print("  B")
-                    num = self
-                    while num.parent is not None and num.kant == "L":
-                        num = num.parent
-                    if num.kant == "R":
-                        num.PassToRight(self.l.value) # ???
-
-                # right
-                print("**** RIGHT")
-                if self.kant == "L":
-                    print("  A")
-                    self.parent.r.PassToRight(self.r.value)
-                else:
-                    print("  B")
-                    num = self
-                    while num.parent is not None and num.kant == "R":
-                        num = num.parent
-                    if num.kant == "L":
-                        num.PassToLeft(self.r.value) # ???
-
-                self.l = None
-                self.r = None
-                self.value = 0
-                return True
-            if self.l is not None and self.l.Explode(level + 1):
-                return True
-            if self.r is not None and self.r.Explode(level + 1):
-                return True
-            return False
-        """
 
         def Split(self) -> bool:
             if self.value is not None:
@@ -353,11 +288,12 @@ class Day18Solution(Aoc):
                 changed = False
                 self.CalcIndexes()
                 while self.Explode():
-                    print(f"After Explode: {self}")
+                    # print(f"After Explode: {self}")
                     changed = changed or True
-                while self.Split():
-                    print(f"After Split: {self}")
-                    changed = changed or True
+                changed = changed or self.Split()
+                #while self.Split():
+                #    print(f"After Split: {self}")
+                #    changed = changed or True
 
     def ParseInput(self):
         numbers = [self.Snailfish.Parse(line, None) for line in self.inputdata]
@@ -376,10 +312,10 @@ class Day18Solution(Aoc):
         som = numbers[0]
         for num in numbers[1:]:
             som = som.Add(num)
-            print(f"TussenSom: {som}")
-            a = input()
+            print(f"{som}")
+            # a = input()
 
-        print(f"   Final Sum: {som}")
+        print(f"Final Sum:\n{som}")
         answer = som.Magnitude()
 
         self.ShowAnswer(answer)
@@ -403,3 +339,10 @@ if __name__ == "__main__":
 
 # Template Version 1.3
 
+
+"""
+[[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]], [7,[[[3,7],[4,3]],[[6,3],[8,8]]]]]
+
+
+
+"""
