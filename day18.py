@@ -38,7 +38,6 @@ class Day18Solution(Aoc):
         goal = self.TestDataA4()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
-
         goal = self.TestDataA5()
         self.PartA()
         self.Assert(self.GetAnswerA(), goal)
@@ -53,8 +52,16 @@ class Day18Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-        [[[[4,3],4],4],[7,[[8,4],9]]]
-        [1,1]
+        [[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
+        [7,[[[3,7],[4,3]],[[6,3],[8,8]]]]
+        [[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]
+        [[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]
+        [7,[5,[[3,8],[1,4]]]]
+        [[2,[2,2]],[8,[8,1]]]
+        [2,9]
+        [1,[[[9,3],9],[[9,0],[0,7]]]]
+        [[[5,[7,4]],7],1]
+        [[[[4,2],2],6],[8,7]]
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
@@ -133,6 +140,7 @@ class Day18Solution(Aoc):
             self.value = None
             self.parent = None
             self.kant = ""
+            self.index = None
 
         @staticmethod
         def FindCenter(line:str) -> int:
@@ -184,15 +192,26 @@ class Day18Solution(Aoc):
         def __str__(self):
             if self.parent is None:
                 if self.value is not None:
-                    return "Root:" + str(self.value)
-                return f"ROOT[{self.l},{self.r}]"
+                    return str(self.value)
+                return f"[{self.l},{self.r}]"
             if self.value is not None:
+                # return "{" + str(self.index) + "}" + str(self.value)
                 return str(self.value)
             return f"[{self.l},{self.r}]"
 
             # if self.value is not None:
             #     return self.kant + str(self.value)
             # return f"{self.kant}[{self.l},{self.r}]"
+
+        def CalcIndexes(self, pos:int = 0):
+            if self.IsSimpleValue():
+                self.index = pos
+                pos += 1
+            else:
+                self.index = None
+                pos = self.l.CalcIndexes(pos)
+                pos = self.r.CalcIndexes(pos)
+            return pos
 
         def Magnitude(self):
             if self.value is not None:
@@ -212,15 +231,26 @@ class Day18Solution(Aoc):
         def IsSimpleValue(self) -> bool:
             return self.value is not None
 
-        def PassToRight(self, value:int):
-            print(f"PassToRight {self}")
-            n = self
-            while not n.IsSimpleValue():
-                n = n.l
-                print(n)
-            print(f"Add {value} to {n.value}")
-            n.value += value
+        def TryAddToValueWithIndex(self, index:int, value:int):
+            if self.IsSimpleValue() and self.index == index:
+                self.value += value
+                return True
+            if self.IsSimpleValue():
+                return False
+            if self.l.TryAddToValueWithIndex(index, value):
+                return True
+            if self.r.TryAddToValueWithIndex(index, value):
+                return True
+            return False
 
+        def AddToValueWithIndex(self, index:int, value:int):
+            print(f"Add {value} to num with index {index}")
+            current = self
+            while current.parent is not None:
+                current = current.parent
+            current.TryAddToValueWithIndex(index, value)
+
+        """
         def PassToLeft(self, value:int):
             print(f"PassToLeft {self}")
             n = self
@@ -229,8 +259,30 @@ class Day18Solution(Aoc):
                 print(n)
             print(f"Add {value} to {n.value}")
             n.value += value
+        """
 
         def Explode(self, level:int = 0) -> bool:
+            if level == 0:
+                self.CalcIndexes()
+
+            if level == 4 and self.IsSimplePair():
+                # print("*************************")
+                # print(f"Need explode: {self}")
+
+                self.AddToValueWithIndex(self.l.index - 1, self.l.value)
+                self.AddToValueWithIndex(self.r.index + 1, self.r.value)
+
+                self.l = None
+                self.r = None
+                self.value = 0
+                return True
+            if self.l is not None and self.l.Explode(level + 1):
+                return True
+            if self.r is not None and self.r.Explode(level + 1):
+                return True
+            return False
+        """
+        def ExplodeX(self, level:int = 0) -> bool:
             if level == 4 and self.IsSimplePair():
                 print("*************************")
                 print(f"Need explode: {self}")
@@ -275,6 +327,7 @@ class Day18Solution(Aoc):
             if self.r is not None and self.r.Explode(level + 1):
                 return True
             return False
+        """
 
         def Split(self) -> bool:
             if self.value is not None:
@@ -298,9 +351,9 @@ class Day18Solution(Aoc):
             changed = True
             while changed:
                 changed = False
+                self.CalcIndexes()
                 while self.Explode():
                     print(f"After Explode: {self}")
-                    a = input()
                     changed = changed or True
                 while self.Split():
                     print(f"After Split: {self}")
@@ -314,9 +367,17 @@ class Day18Solution(Aoc):
         self.StartPartA()
 
         numbers = self.ParseInput()
+        """
+        for num in numbers:
+            num.CalcIndexes()
+            print(num)
+        answer = None
+        """
         som = numbers[0]
         for num in numbers[1:]:
             som = som.Add(num)
+            print(f"TussenSom: {som}")
+            a = input()
 
         print(f"   Final Sum: {som}")
         answer = som.Magnitude()
