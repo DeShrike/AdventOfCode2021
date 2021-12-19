@@ -232,6 +232,7 @@ class Day18Solution(Aoc):
 
         def Explode(self, level:int = 0) -> bool:
             if level == 4 and self.IsSimplePair():
+                print("*************************")
                 print(f"Need explode: {self}")
                 if self.l.value is None or self.r.value is None:
                     print(f"Bad Explode: {self}")
@@ -240,18 +241,30 @@ class Day18Solution(Aoc):
                 a = input()
 
                 # left
+                print("**** LEFT")
                 if self.kant == "R":
+                    print("  A")
                     self.parent.l.PassToLeft(self.l.value)
                 else:
-                    pass
-                    # self.parent.r.PassToRight(self.l.value) # ???
+                    print("  B")
+                    num = self
+                    while num.parent is not None and num.kant == "L":
+                        num = num.parent
+                    if num.kant == "R":
+                        num.PassToRight(self.l.value) # ???
 
                 # right
+                print("**** RIGHT")
                 if self.kant == "L":
+                    print("  A")
                     self.parent.r.PassToRight(self.r.value)
                 else:
-                    pass
-                    # self.parent.l.PassToLeft(self.r.value) # ???
+                    print("  B")
+                    num = self
+                    while num.parent is not None and num.kant == "R":
+                        num = num.parent
+                    if num.kant == "L":
+                        num.PassToLeft(self.r.value) # ???
 
                 self.l = None
                 self.r = None
@@ -287,6 +300,7 @@ class Day18Solution(Aoc):
                 changed = False
                 while self.Explode():
                     print(f"After Explode: {self}")
+                    a = input()
                     changed = changed or True
                 while self.Split():
                     print(f"After Split: {self}")
