@@ -123,36 +123,31 @@ class Scanner():
 
     def Rotate(self, rotation):
         result = [[0, 0, 0] for _ in self.beacons]
-        B = rotation
-        A = self.beacons
-        for i in range(len(A)):
-           for j in range(len(B[0])):
-              for k in range(len(B)):
-                 result[i][j] += A[i][k] * B[k][j]
+        for i in range(len(self.beacons)):
+           for j in range(len(rotation[0])):
+              for k in range(len(rotation)):
+                 result[i][j] += self.beacons[i][k] * rotation[k][j]
         return result
 
-    def FindOverlap(self, fixedbeacon) -> bool:
-        # print(f"Check {fixedbeacon.name} with {self.name}")
+    def FindOverlap(self, fixedscanner) -> bool:
         for rix, rot in enumerate(self.rotations):
             result = self.Rotate(rot)
 
             diffs = []
-            for x, y in itertools.product(range(len(result)), range(len(fixedbeacon.beacons))):
-                diff = (result[x][0] - fixedbeacon.beacons[y][0], result[x][1] - fixedbeacon.beacons[y][1], result[x][2] - fixedbeacon.beacons[y][2])
+            for x, y in itertools.product(range(len(result)), range(len(fixedscanner.beacons))):
+                diff = (result[x][0] - fixedscanner.beacons[y][0], result[x][1] - fixedscanner.beacons[y][1], result[x][2] - fixedscanner.beacons[y][2])
                 diffs.append(diff)
+
             c = dict(collections.Counter(diffs))
             cc = [(di, co) for (di, co) in c.items() if co >= 12]
             if len(cc) > 0:
-                # print(cc)
                 di = cc[0][0]
                 x = cc[0][1]
                 self.rotationsix = rix
                 self.beacons = result
-                self.pos = [fixedbeacon.pos[0] - di[0], fixedbeacon.pos[1] - di[1], fixedbeacon.pos[2] - di[2]]
+                self.pos = [fixedscanner.pos[0] - di[0], fixedscanner.pos[1] - di[1], fixedscanner.pos[2] - di[2]]
                 self.posknown = True
-                # print(di, x)
-                print(f"Beacon {self.name} pos is {self.pos}")
-                # a = input()
+                print(f"Scanner {self.name} pos is {self.pos}")
                 return True
 
         return False
@@ -321,16 +316,8 @@ class Day19Solution(Aoc):
         return 79
 
     def TestDataB(self):
-        self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
-        return None
+        # Using results of PartA
+        return 3621
 
     def ParseInput(self):
         scanners = []
@@ -351,23 +338,25 @@ class Day19Solution(Aoc):
     def PartA(self):
         self.StartPartA()
 
-        scanners = self.ParseInput()
+        self.scanners = self.ParseInput()
 
         while True:
             found = False
-            for s1 in scanners:
+            for s1 in self.scanners:
                 if not s1.posknown:
                     continue
-                for s2 in scanners:
+                for s2 in self.scanners:
                     if s2.posknown:
                         continue
-                    found = s2.FindOverlap(s1)
+                    found = found or s2.FindOverlap(s1)
             if not found:
                 break
 
-        base = scanners[0]
-        bea = set([ (x, y, z) for x,y,z in base.beacons])
-        for s in scanners[1:]:
+        print([s.name for s in self.scanners if s.posknown == False])
+
+        base = self.scanners[0]
+        bea = set([ (x, y, z) for x, y, z in base.beacons])
+        for s in self.scanners[1:]:
             for b in s.beacons:
                 pos = (base.pos[0] + b[0] + s.pos[0], base.pos[1] + b[1] + s.pos[1], base.pos[2] + b[2] + s.pos[2])
                 bea.add(pos)
@@ -375,12 +364,20 @@ class Day19Solution(Aoc):
 
         self.ShowAnswer(answer)
 
+    @staticmethod
+    def Manhattan(pos1, pos2):
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1]) + abs(pos1[2] - pos2[2])
+
     def PartB(self):
         self.StartPartB()
 
-        # Add solution here
+        # Using results of PartA (in self.scanners)
 
-        answer = None
+        highest = 0
+        for a, b in itertools.product(self.scanners, self.scanners):
+            highest = max(self.Manhattan(a.pos, b.pos), highest)
+
+        answer = highest
 
         self.ShowAnswer(answer)
 
