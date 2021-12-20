@@ -1,4 +1,5 @@
 from aoc import Aoc
+from canvas import Canvas
 import sys
 
 # Day 20
@@ -77,6 +78,24 @@ class Day20Solution(Aoc):
             grid.insert(0, [0 for _ in range(width)])
         return grid
 
+    def SetPixel(self, canvas, cellsize:int, x:int, y:int, color):
+        for xx in range(x * cellsize, (x + 1) * cellsize + 1):
+            for yy in range(y * cellsize, (y + 1) * cellsize + 1):
+                canvas.set_pixel(xx, yy, color)
+
+    def CreatePNG(self, grid, cellsize:int = 1):
+        print("Creating PNG")
+        width = len(grid[0])
+        height = len(grid)
+        canvas = Canvas(width * cellsize, height * cellsize)
+
+        for x in range(width):
+            for y in range(height):
+                value = grid[y][x]
+                self.SetPixel(canvas, cellsize, x, y, (255, 255, 255) if value else (0, 0, 0))
+
+        canvas.save_PNG(f"day{self._day}.png")
+
     def Enhance(self, grid, algo):
         width = len(grid[0])
         height = len(grid)
@@ -129,13 +148,14 @@ class Day20Solution(Aoc):
             grid = self.Enhance(grid, algo)
             grid = self.Enhance(grid, algo)
             self.ClearBorder(grid)
+
         print("")
 
         # self.PrintGrid(grid)
-
         answer = sum([sum(line) for line in grid])
 
         self.ShowAnswer(answer)
+        self.CreatePNG(grid, 2)
 
 
 if __name__ == "__main__":
