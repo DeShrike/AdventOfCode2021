@@ -28,7 +28,7 @@ class Area():
                 self.z1, self.z2 = self.z2, self.z1
 
     def __repr__(self) -> str:
-        return f"Area(\"{self.mode} x={self.x1}..{self.x2},y={self.y1}..{self.y2},z={self.z1}..{self.z2}\")"
+        return f"Area(\"{self.mode} x={self.x1}..{self.x2},y={self.y1}..{self.y2},z={self.z1}..{self.z2}\")\n"
 
     def Size(self) -> int:
         return (self.x2 - self.x1) * (self.y2 - self.y1) * (self.z2 - self.z1)
@@ -36,7 +36,7 @@ class Area():
     def IsInside(self, x:int, y:int, z:int) -> bool:
         return self.x1 <= x <= self.x2 and self.y1 <= y <= self.y2 and self.z1 <= z <= self.z2
 
-    def Overlap(self, otherarea) -> bool:
+    def Overlaps(self, otherarea) -> bool:
         return any([
             self.IsInside(otherarea.x1, otherarea.y1, otherarea.z1),
             self.IsInside(otherarea.x2, otherarea.y1, otherarea.z1),
@@ -61,14 +61,46 @@ class Area():
         ])
 
 class ReactorArea(Area):
-    def __init__(self, x1:int, x2:int, y1:int, y2:int, z1:int, z2:int, state:int):
-        self.x1 = x1
-        self.x2 = x2
-        self.y1 = y1
-        self.y2 = y2
-        self.z1 = z1
-        self.z2 = z2
+    def __init__(self, area:Area, state:int):
+        self.x1 = area.x1
+        self.x2 = area.x2
+        self.y1 = area.y1
+        self.y2 = area.y2
+        self.z1 = area.z1
+        self.z2 = area.z2
         self.state = state
+
+class Reactor():
+    def __init__(self):
+        self.areas = []
+        self.lit = 0
+
+    def AddArea(self, step:Area):
+        print(f"Adding {step}")
+        for ra in self.areas:
+            if ra.Contains(step):
+                print("Contains")
+                if step.mode == "on":
+                    pass
+                else:
+                    pass
+            elif ra.Overlap(step):
+                print("Overlaps")
+                if step.mode == "on":
+                    self.areas.append(ReactorArea(step, 1))
+                else:
+                    pass
+            else:
+                print("No Overlap")
+                if step.mode == "on":
+                    self.areas.append(ReactorArea(step, 1))
+                else:
+                    pass
+
+        if len(self.areas) == 0 and step.mode == "on":
+            self.areas.append(ReactorArea(step, 1))
+
+        a = input()
 
 
 class Day22Solution(Aoc):
@@ -82,9 +114,9 @@ class Day22Solution(Aoc):
     def Test(self):
         self.StartDay(22)
 
-        goal = self.TestDataA()
-        self.PartA()
-        self.Assert(self.GetAnswerA(), goal)
+        #goal = self.TestDataA()
+        #self.PartA()
+        #self.Assert(self.GetAnswerA(), goal)
 
         goal = self.TestDataB()
         self.PartB()
@@ -214,12 +246,36 @@ class Day22Solution(Aoc):
     def PartB(self):
         self.StartPartB()
 
-        size = 150000
         steps = [Area(line) for line in self.inputdata]
-        reactor = [ReactorArea(-size, size, -size, size, -size, size, 0)]
+        ons = [step for step in steps if step.mode == "on"]
+        offs = [step for step in steps if step.mode == "off"]
+        ons.sort(key=lambda x: x.Size(), reverse=True)
+        offs.sort(key=lambda x: x.Size(), reverse=True)
+        print(offs)
 
+        cc = {}
+        tot = 0
+        for ix, a in enumerate(ons):
+            cc[ix] = 0
+            for jx, b in enumerate(ons):
+                if a == b:
+                    continue
+                if b.Overlaps(a):
+                    cc[ix] += 1
+                    tot += 1
+        print(cc)
+        print(tot)
+
+        """
+        steps = [Area(line) for line in self.inputdata]
+        reactor = Reactor()
+
+        for step in steps:
+            reactor.AddArea(step)
+
+        answer = reactor.lit
+        """
         answer = None
-
         self.ShowAnswer(answer)
 
 
