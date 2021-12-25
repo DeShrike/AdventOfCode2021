@@ -186,6 +186,13 @@ class Day24Solution(Aoc):
                 digits[dix] = str(mix)
 
         """
+        num = 19929994293900
+        for i in range(100):
+            alu.Run(str(num + 1))
+            if alu.z < 1000:
+                print(f"{num + 1}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
+
+        """
         digits = ["1", "9", "9", "2", "9", "9", "9", "4", "2", "9", "3", "9", "6", "9"]
         for ii in range(1, 10):
             for dix in range(2, 14):
@@ -202,6 +209,7 @@ class Day24Solution(Aoc):
                     answer = num
                     break
                 digits[dix] = mem
+        """
         """
         parts = ["19", "29", "39", "49", "59", "69", "79", "89", "99", "98", "97", "96", "95", "94", "93", "92", "91"]
         for d in itertools.permutations(parts, 7):
