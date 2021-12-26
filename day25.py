@@ -45,14 +45,6 @@ class Day25Solution(Aoc):
 
     def TestDataB(self):
         self.inputdata.clear()
-        # self.TestDataA()    # If test data is same as test data for part A
-        testdata = \
-        """
-        1000
-        2000
-        3000
-        """
-        self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
 
     def DoStep(self, grid):
@@ -102,15 +94,14 @@ class Day25Solution(Aoc):
             if not moved:
                 break
             answer += 1
-            print(answer)
+            print(f"\r{answer}", end="")
+        print("", end="\r")
 
         answer += 1
         self.ShowAnswer(answer)
 
     def PartB(self):
         self.StartPartB()
-
-        # Add solution here
 
         answer = None
 
