@@ -7,6 +7,27 @@ import sys
 # Day 24
 # https://adventofcode.com/2021
 
+"""
+inp w       inp w       inp w   inp w   inp w   inp w   inp w   inp w   inp w   inp w   inp w   inp w   inp w   inp w
+mul x 0     mul x 0     mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0 mul x 0
+add x z     add x z     add x z add x z add x z add x z add x z add x z add x z add x z add x z add x z add x z add x z
+mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26    mod x 26
+div z 1     div z 1 div z 1 div z 26    div z 1 div z 1 div z 1 div z 26    div z 1 div z 26    div z 26    div z 26    div z 26    div z 26
+add x 13    add x 12    add x 10    add x -11   add x 14    add x 13    add x 12    add x -5    add x 10    add x 0 add x -11   add x -13   add x -13   add x -11
+eql x w     eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w eql x w
+eql x 0     eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0 eql x 0
+mul y 0     mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0
+add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25    add y 25
+mul y x     mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x
+add y 1     add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1 add y 1
+mul z y     mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y mul z y
+mul y 0     mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0 mul y 0
+add y w     add y w add y w add y w add y w add y w add y w add y w add y w add y w add y w add y w add y w add y w
+add y 8     add y 16    add y 4 add y 1 add y 13    add y 5 add y 0 add y 10    add y 7 add y 2 add y 13    add y 15    add y 14    add y 9
+mul y x     mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x mul y x
+add z y     add z y add z y add z y add z y add z y add z y add z y add z y add z y add z y add z y add z y add z y
+"""
+
 class Alu():
 
     def __init__(self, program):
@@ -111,17 +132,6 @@ class Day24Solution(Aoc):
         self.inputdata.clear()
         testdata = \
         """
-        inp w
-        add z w
-        mod z 2
-        div w 2
-        add y w
-        mod y 2
-        div w 2
-        add x w
-        mod x 2
-        div w 2
-        mod w 2
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
@@ -131,9 +141,6 @@ class Day24Solution(Aoc):
         # self.TestDataA()    # If test data is same as test data for part A
         testdata = \
         """
-        1000
-        2000
-        3000
         """
         self.inputdata = [line.strip() for line in testdata.strip().split("\n")]
         return None
@@ -145,98 +152,11 @@ class Day24Solution(Aoc):
         program = [line.split(" ") for line in self.inputdata]
         alu = Alu(program)
 
-        """
-        digits = ["9" for _ in range(14)]
-        for _ in range(10):
-            for dix in range(14):
-                mi = 1e20
-                mix = None
-                for v in range(9, 0, -1):
-                    digits[dix] = str(v)
+        divz = [ 1   1,  1, 26,  1,  1,  1, 26,  1, 26,  26,  26,  26,  26]
+        addx = [13, 12, 10, 11, 14, 13, 12, -5, 10,  0, -11, -13, -13, -11]
+        addy = [ 8, 16,  4,  1, 13,  5,  0, 10,  7,  2,  13,  15,  14,   9]
 
-                    num = "".join(digits)
-                    alu.Run(num)
-                    if alu.z < mi:
-                        mi = alu.z
-                        mix = v
-                    if alu.z < 10:
-                        print(f"{num}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-
-                if alu.z == 0:
-                    break
-                digits[dix] = str(mix)
-
-        print("Next Step")
-
-        for ii in range(11, 100):
-            digits[0] = str(ii // 10)
-            digits[1] = str(ii % 10)
-            for dix in range(2, 14):
-                mem = digits[dix]
-                for v in range(9, 0, -1):
-                    digits[dix] = str(v)
-
-                    num = "".join(digits)
-                    alu.Run(num)
-                    if alu.z < 10:
-                        print(f"{num}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-                    digits[dix] = mem
-                if alu.z == 0:
-                    break
-                digits[dix] = str(mix)
-
-        """
-        num = 19929994293900
-        for i in range(100):
-            alu.Run(str(num + 1))
-            if alu.z < 1000:
-                print(f"{num + 1}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-
-        """
-        digits = ["1", "9", "9", "2", "9", "9", "9", "4", "2", "9", "3", "9", "6", "9"]
-        for ii in range(1, 10):
-            for dix in range(2, 14):
-                mem = digits[dix]
-                for v in range(9, 0, -1):
-                    digits[dix] = str(v)
-
-                    num = "".join(digits)
-                    alu.Run(num)
-                    if alu.z < 10:
-                        print(f"{num}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-                    digits[dix] = mem
-                if alu.z == 0:
-                    answer = num
-                    break
-                digits[dix] = mem
-        """
-        """
-        parts = ["19", "29", "39", "49", "59", "69", "79", "89", "99", "98", "97", "96", "95", "94", "93", "92", "91"]
-        for d in itertools.permutations(parts, 7):
-            num = "".join(d)
-            alu.Run(num)
-            if alu.z < 10000:
-                print(f"{num}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-            if alu.z == 0:
-                break
-        """
-        """
-        parts = ["19", "29", "39", "49", "59", "69", "79", "89", "99", "98", "97", "96", "95", "94", "93", "92", "91"]
-        groups = ["19", "92", "99", "94", "29", "39", "69"]
-
-        for g in range(len(groups)):
-            mem = groups[g]
-            for p in parts:
-                groups[g] = p
-                num = "".join(groups)
-                    alu.Run(num)
-                if alu.z < 100:
-                    print(f"{num}\t{alu.w}\t{alu.x}\t{alu.y}\t{alu.z}")
-                if alu.z == 0:
-                    break
-            groups[g] = mem
-        """
-
+        # num = 19929994293900
         self.ShowAnswer(answer)
 
     def PartB(self):
