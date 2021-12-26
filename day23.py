@@ -63,6 +63,19 @@ class Day23Solution(Aoc):
 
         answer = None
 
+        nodes = [
+            "H1", "H2", "H3", "H4", "H5", "H6", "H7",
+            "A1", "A2",
+            "B1", "B2",
+            "C1", "C2",
+            "D2", "D2"
+        ]
+
+        edges = [
+            ()
+        ]
+
+
         # Attempt 1: 16058 is too high
         # Attempt 2: 15958 is too high
         # Attempt 3: 15938 is too high
